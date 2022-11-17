@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 
-function Main () {
+function About () {
   return (
     <Box>
-      This is Main Page
+      This is About Page
     </Box>
- );
+  );
 }
 
-export default Main;
+export default About;

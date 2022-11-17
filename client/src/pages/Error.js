@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 
-function Main () {
+function Error () {
   return (
     <Box>
-      This is Main Page
+      You've got an error
     </Box>
- );
+  );
 }
 
-export default Main;
+export default Error;
