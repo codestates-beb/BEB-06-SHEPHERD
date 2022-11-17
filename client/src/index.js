@@ -18,6 +18,8 @@ import Main from 'pages/Main';
 import Transaction from 'pages/Transaction';
 import App from './App';
 
+// Miscellaneous
+import 'global.css';
 
 const router = createBrowserRouter([
   {
