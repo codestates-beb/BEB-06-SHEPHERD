@@ -2,7 +2,16 @@
 // 기본적인 골자는 react-router 튜토리얼을 참고했습니다.
 // https://reactrouter.com/en/main/start/tutorial
 
+// 또한 MUI를 위한 Theme 관리도 이곳에서 합니다.
+// https://mui.com/material-ui/customization/theming/
+
 // Modules
+import { red } from '@mui/material/colors';
+import CssBaseline from '@mui/material/CssBaseline';
+import {
+  createTheme,
+  ThemeProvider
+} from '@mui/material/styles';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
@@ -18,9 +27,7 @@ import Main from 'pages/Main';
 import Transaction from 'pages/Transaction';
 import App from './App';
 
-// Miscellaneous
-import 'global.css';
-
+// Router 라우터
 const router = createBrowserRouter([
   {
     path: '/',
@@ -47,9 +54,28 @@ const router = createBrowserRouter([
   }
 ]);
 
+// 배경 및 Primary, Secondary 등등 다양한 색상을 지정하고
+// 웹페이지 전체에 Context 형태로 정해줄 수 있는 설정
+const theme = createTheme({
+  palette: {
+    background: {
+      default: red[200]
+    },
+    primary: {
+      main: '#0052cc'
+    },
+    secondary: {
+      main: '#edf2ff'
+    }
+  }
+});
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );

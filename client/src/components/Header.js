@@ -1,4 +1,4 @@
-import BaseContainer from 'components/BaseContainer';
+import BaseContainer from 'components/base/BaseContainer';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
