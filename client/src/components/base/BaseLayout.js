@@ -1,7 +1,7 @@
 // Components
 import Footer from 'components/Footer';
 import Header from 'components/Header';
-import BaseContainer from 'components/BaseContainer';
+import BaseContainer from 'components/base/BaseContainer';
 
 // Modules
 import Grid from '@mui/material/Grid';
@@ -22,7 +22,7 @@ const fullScreenHeightStyle = {
 
 function BaseLayout (props) {
   return (
-    <Grid container className='App' sx={fullScreenHeightStyle}>
+    <Grid container sx={fullScreenHeightStyle}>
       <Grid component='header' item columns={12} sx={{ flexShrink: 1 }}>
         <Header />
       </Grid>
