@@ -13,6 +13,7 @@ import Grid from '@mui/material/Grid';
 
 const fullScreenHeightStyle = {
   minHeight: '100vh',
+  flexWrap: 'nowrap',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignContent: 'stretch',
