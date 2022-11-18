@@ -5,7 +5,7 @@ function Transaction () {
     <Box>
       This is Transaction Page
     </Box>
- );
+  );
 }
 
 export default Transaction;
