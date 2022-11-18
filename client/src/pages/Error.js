@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
+import BaseLayout from 'components/BaseLayout';
 
 function Error () {
   return (
-    <Box>
+    <BaseLayout>
       You've got an error
-    </Box>
+    </BaseLayout>
   );
 }
 
