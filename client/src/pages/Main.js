@@ -5,7 +5,7 @@ function Main () {
     <Box>
       This is Main Page
     </Box>
- );
+  );
 }
 
 export default Main;
