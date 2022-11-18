@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 
-function About () {
+function Contact () {
   return (
     <Box>
-      This is About Page
+      This is Contact Page
     </Box>
   );
 }
 
-export default About;
+export default Contact;
