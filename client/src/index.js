@@ -6,6 +6,8 @@
 // https://mui.com/material-ui/customization/theming/
 
 // Modules
+import { red } from '@mui/material/colors';
+import CssBaseline from '@mui/material/CssBaseline';
 import {
   createTheme,
   ThemeProvider
@@ -16,7 +18,6 @@ import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
 
 // Pages
 import Contact from 'pages/Contact';
@@ -53,8 +54,13 @@ const router = createBrowserRouter([
   }
 ]);
 
+// 배경 및 Primary, Secondary 등등 다양한 색상을 지정하고
+// 웹페이지 전체에 Context 형태로 정해줄 수 있는 설정
 const theme = createTheme({
   palette: {
+    background: {
+      default: red[200]
+    },
     primary: {
       main: '#0052cc'
     },
@@ -68,7 +74,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <CssBaseline enableColorScheme />
       <RouterProvider router={router} />
     </ThemeProvider>
   </React.StrictMode>
