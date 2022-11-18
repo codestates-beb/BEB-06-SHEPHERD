@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom';
 
 // Pages
-import About from 'pages/About';
+import Contact from 'pages/Contact';
 import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
@@ -28,8 +28,8 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: 'about/',
-        element: <About />
+        path: 'contact/',
+        element: <Contact />
       },
       {
         path: 'dashboard/',
