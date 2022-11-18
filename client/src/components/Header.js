@@ -1,4 +1,4 @@
-import BaseContainer from 'components/BaseContainer';
+import BaseContainer from 'components/base/BaseContainer';
 
 function Header () {
   return (

@@ -1,4 +1,4 @@
-import BaseLayout from 'components/BaseLayout';
+import BaseLayout from 'components/base/BaseLayout';
 
 function Error () {
   return (

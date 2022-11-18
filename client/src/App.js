@@ -1,5 +1,5 @@
 // Components
-import BaseLayout from 'components/BaseLayout';
+import BaseLayout from 'components/base/BaseLayout';
 
 // Modules
 import { Outlet } from 'react-router-dom';
