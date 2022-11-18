@@ -1,8 +1,6 @@
 import mapData from 'assets/topoJson/skorea-municipalities-2018-topo';
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 
-console.log(mapData);
-
 function MapChart () {
   return (
     <ComposableMap
