@@ -1,26 +1,31 @@
 // Modules
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 
 // Components
-import TransactionDetail from 'components/TransactionDetail';
-import TransferDetail from 'components/TransferDetail';
+import TransactionList from 'components/TransactionList';
+import OrderList from 'components/OrderList';
+import MakeOrder from 'components/MakeOrder';
 
 function Dashboard () {
   const style = {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
     justifyContent: 'center',
     alignContent: 'stretch',
     alignItems: 'stretch'
   };
 
   return (
-    <Grid container spacing={2} sx={style}>
-      <Grid item columns={6}>
-        <TransactionDetail />
+    <Grid container spacing={2} p={2} sx={style}>
+      <Grid item xs={12} sm={6}>
+        <Paper elevation={5} sx={{ height: 1 }}>
+          <TransactionList />
+        </Paper>
       </Grid>
-      <Grid item columns={6}>
-        <TransferDetail />
+      <Grid item xs={12} sm={6}>
+        <Paper elevation={5} sx={{ height: 1 }}>
+          <OrderList />
+          <MakeOrder />
+        </Paper>
       </Grid>
     </Grid>
   );
