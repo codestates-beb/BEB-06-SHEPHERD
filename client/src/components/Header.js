@@ -19,13 +19,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-// Components
-import BaseContainer from 'components/base/BaseContainer';
-
 const pages = ['About Us'];
 const settings = ['Dashboard', 'Transaction Detail', 'Make Transfer', 'Logout'];
 
-function Header () {
+function Header (props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -45,7 +42,7 @@ function Header () {
   };
 
   return (
-    <AppBar position='static'>
+    <AppBar position='flex' component='header' sx={props.sx}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <LocalShippingIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -133,8 +130,6 @@ function Header () {
               </Button>
             ))}
           </Box>
-          {/* 베이스 컨테이너 */}
-          <BaseContainer />
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title='Open Menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
