@@ -6,7 +6,6 @@
 // https://mui.com/material-ui/customization/theming/
 
 // Modules
-import { red } from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
 import {
   createTheme,
@@ -57,16 +56,20 @@ const router = createBrowserRouter([
 // 배경 및 Primary, Secondary 등등 다양한 색상을 지정하고
 // 웹페이지 전체에 Context 형태로 정해줄 수 있는 설정
 const theme = createTheme({
-  palette: {
-    background: {
-      default: red[200]
-    },
-    primary: {
-      main: '#0052cc'
-    },
-    secondary: {
-      main: '#edf2ff'
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          minHeight: '2em',
+          backgroundColor: theme.palette.primary.light
+        })
+      }
     }
+  },
+  palette: {
+    background: ({ theme }) => ({
+      default: theme.palette.grey[300]
+    })
   }
 });
 

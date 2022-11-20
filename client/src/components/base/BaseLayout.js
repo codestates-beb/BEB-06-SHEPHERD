@@ -1,10 +1,10 @@
 // Components
 import Footer from 'components/Footer';
 import Header from 'components/Header';
-import BaseContainer from 'components/base/BaseContainer';
 
 // Modules
-import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Container from '@mui/material/Container';
 
 /*
   기본적인 페이지 레이아웃을 Layout에서 구성합니다.
@@ -13,28 +13,33 @@ import Grid from '@mui/material/Grid';
 
 const fullScreenHeightStyle = {
   minHeight: '100vh',
-  flexWrap: 'nowrap',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  alignContent: 'stretch',
-  alignItems: 'stretch'
+  flexWrap: 'nowrap'
 };
 
 function BaseLayout (props) {
   return (
-    <Grid container sx={fullScreenHeightStyle}>
-      <Grid component='header' item columns={12} sx={{ flexShrink: 1 }}>
-        <Header />
-      </Grid>
-      <Grid item columns={12} sx={{ flexGrow: 1 }}>
-        <BaseContainer>
-          {props.children}
-        </BaseContainer>
-      </Grid>
-      <Grid component='footer' item columns={12} sx={{ flexShrink: 1 }}>
-        <Footer />
-      </Grid>
-    </Grid>
+
+    <Stack
+      direction='column'
+      justifyContent='space-between'
+      alignItems='stretch'
+      alignContent='stretch'
+      spacing={0}
+      sx={fullScreenHeightStyle}
+    >
+      <Header sx={{ flexShrink: 1 }} />
+      <Container sx={{
+        flexGrow: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'stretch',
+        alignItems: 'stretch'
+      }}
+      >
+        {props.children}
+      </Container>
+      <Footer sx={{ flexShrink: 1 }} />
+    </Stack>
   );
 }
 

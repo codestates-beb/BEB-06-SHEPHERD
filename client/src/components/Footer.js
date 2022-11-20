@@ -1,8 +1,16 @@
-import BaseContainer from 'components/base/BaseContainer';
+import AppBar from '@mui/material/AppBar';
+import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
 
-function Footer () {
+function Footer (props) {
   return (
-    <BaseContainer />
+    <AppBar position='flex' component='footer' sx={props.sx}>
+      <Container maxWidth='xl'>
+        <Toolbar disableGutters>
+          Footer
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
 
