@@ -1,6 +1,7 @@
 // Modules
 import * as React from 'react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Material UI
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -19,8 +20,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-const pages = ['About Us'];
-const settings = ['Dashboard', 'Transaction Detail', 'Make Transfer', 'Logout'];
+const pages = [{ name: ['About Us'], routeName: ['About'] }, { name: ['Contact Us'], routeName: ['Contact'] }, { name: ['Dashboard'], routeName: ['Dashboard'] }];
+const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction Detail'], routeName: ['TransactionDetail'] }, { name: ['Make Transfer'], routeName: ['MakeTransfer'] }, { name: ['Logout'], routeName: ['Logout'] }];
 
 function Header (props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -95,7 +96,9 @@ function Header (props) {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>{page}</Typography>
+                  <Typography textAlign='center'>
+                    <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/${page.routeName}`}>{page.name}</Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -117,7 +120,7 @@ function Header (props) {
               textDecoration: 'none'
             }}
           >
-            LOGO
+            STEEL TRACKER
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -126,14 +129,14 @@ function Header (props) {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                <Link style={{ textDecoration: 'none', color: 'white' }} to={`/${page.routeName}`}>{page.name}</Link>
               </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title='Open Menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar sx={{ bgcolor: green[500] }}>
+                <Avatar sx={{ bgcolor: green[0] }}>
                   <AccountCircleIcon fontSize='large' />
                 </Avatar>
               </IconButton>
@@ -156,7 +159,9 @@ function Header (props) {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
+                  <Typography textAlign='center'>
+                    <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/${setting.routeName}`}>{setting.name}</Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
