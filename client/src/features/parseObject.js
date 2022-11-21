@@ -19,7 +19,6 @@ const flattenObject = (obj, previousKey) => {
       const _previousKey = previousKey || '';
       const _currentKey = previousKey ? currentKey.charAt(0).toUpperCase() + currentKey.slice(1) : currentKey;
 
-      console.log(_previousKey, _currentKey);
       flattened[`${_previousKey}${_currentKey}`] = value;
     }
   });
@@ -36,7 +35,6 @@ function parseObject (object, callback) {
     // 영문에 한해 key 값의 첫 문자를 대문자로 변환하고, camelCase 앞에는 여백을 줌
     const capitalLetter = /[A-Z]/g;
     const _key = key.charAt(0).toUpperCase() + key.replace(capitalLetter, ' $&').slice(1);
-    console.log(_key, value);
 
     tempArray.push(callback.call(this, _key, value));
   }
