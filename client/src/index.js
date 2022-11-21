@@ -24,12 +24,7 @@ import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
 import Transaction from 'pages/Transaction';
-import App from 'App'; //상대 경로로 되어있어서 절대경로로 변경
-
-// components
-import About from 'components/About';
-import TransactionDetail from 'components/TransactionDetail';
-import MakeTransfer from 'components/MakeTransfer';
+import App from 'App'; // 상대 경로로 되어있어서 절대경로로 변경
 
 // Router 라우터
 const router = createBrowserRouter([
@@ -39,7 +34,7 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: 'contact/', //==
+        path: 'contact/',
         element: <Contact />
       },
       {
@@ -53,18 +48,6 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Main />
-      },
-      {
-        path: 'about/',
-        element: <About />
-      },
-      {
-        path: 'transactiondetail/',
-        element: <TransactionDetail />
-      },
-      {
-        path: 'maketransfer/',
-        element: <MakeTransfer />
       }
     ]
   }
