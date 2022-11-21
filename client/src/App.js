@@ -1,6 +1,6 @@
 // Components
 import BaseLayout from 'components/base/BaseLayout';
-import PrivateRoute from 'components/PrivateRoute'; 
+import PrivateRoute from 'components/PrivateRoute';
 
 // Modules
 import { Outlet } from 'react-router-dom';
@@ -10,11 +10,11 @@ import { Outlet } from 'react-router-dom';
   해당 위치에 배치합니다.
 */
 
-function App() {
+function App () {
   return (
-      <BaseLayout>
-        <Outlet />
-      </BaseLayout>
+    <BaseLayout>
+      <Outlet />
+    </BaseLayout>
   );
 }
 
