@@ -16,9 +16,10 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { green } from '@mui/material/colors';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const pages = ['About Us'];
-const settings = ['Dashboard', 'Transaction Detail', 'Make Transfer', 'Logout'];
+const pages = [{ name: ['About Us'], routeName: ['About']}, { name: ['Contact Us'], routeName: ['Contact']}, {name: ['Dashboard'], routeName: ['Dashboard']}];
+const settings = [{name: ['Dashboard'], routeName: ['Dashboard']}, {name: ['Transaction Detail'], routeName: ['TransactionDetail']}, {name: ['Make Transfer'], routeName: ['MakeTransfer']}, {name: ['Logout'], routeName: ['Logout'] }];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -93,7 +94,9 @@ function Header() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center">
+                  <Link style={{textDecoration: "none", color: "inherit"}} to={`/${page.routeName}`}>{page.name}</Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -115,7 +118,7 @@ function Header() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            STEEL TRACKER
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -124,7 +127,7 @@ function Header() {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                <Link style={{textDecoration: "none", color: "white"}} to={`/${page.routeName}`}>{page.name}</Link>
               </Button>
             ))}
           </Box>
@@ -133,7 +136,7 @@ function Header() {
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' }}}>
             <Tooltip title="Open Menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar sx={{ bgcolor: green[500] }}>
+                <Avatar sx={{ bgcolor: green[0] }}>
                   <AccountCircleIcon fontSize='large' />
                 </Avatar>
               </IconButton>
@@ -156,7 +159,9 @@ function Header() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center">
+                    <Link style={{textDecoration: "none", color: "inherit"}} to={`/${setting.routeName}`}>{setting.name}</Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
