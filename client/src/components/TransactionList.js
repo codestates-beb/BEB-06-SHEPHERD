@@ -56,7 +56,7 @@ function TransactionItem ({ data }) {
         >
           {
           parseObject(data, (key, value) => {
-            if(value instanceof Date) {
+            if (value instanceof Date) {
               value = value.toDateString();
             }
 
