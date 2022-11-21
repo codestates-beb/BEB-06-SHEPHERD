@@ -25,7 +25,12 @@ import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
 import Transaction from 'pages/Transaction';
-import App from './App';
+import App from 'App'; //상대 경로로 되어있어서 절대경로로 변경
+
+// components
+import About from 'components/About';
+import TransactionDetail from 'components/TransactionDetail';
+import MakeTransfer from 'components/MakeTransfer';
 
 // Router 라우터
 const router = createBrowserRouter([
@@ -35,7 +40,7 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: 'contact/',
+        path: 'contact/', //==
         element: <Contact />
       },
       {
@@ -49,6 +54,18 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Main />
+      },
+      {
+        path: 'about/',
+        element: <About />
+      },
+      {
+        path: 'transactiondetail/',
+        element: <TransactionDetail />
+      },
+      {
+        path: 'maketransfer/',
+        element: <MakeTransfer />
       }
     ]
   }
@@ -59,7 +76,7 @@ const router = createBrowserRouter([
 const theme = createTheme({
   palette: {
     background: {
-      default: red[200]
+      default: red[0] //임시로 배경색 0으로 바꿈
     },
     primary: {
       main: '#0052cc'
