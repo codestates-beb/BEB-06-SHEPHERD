@@ -3,7 +3,7 @@ Trasaction List마다 useState를 두고 컴포넌트 렌더링 타이밍에 데
 */
 
 // Modules
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // icons
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -47,6 +47,35 @@ function TransactionItem (props) {
 }
 
 function TransactionList () {
+  const [transactions, setTransactions] = useState([]);
+
+  const loadList = () => {
+    setTransactions([
+      {
+        arrival: {
+          date: '2022.10.10',
+          location: '대구'
+        },
+        currentLocation: '포항',
+        departure: {
+          date: '2022.10.9',
+          location: '포항'
+        },
+        orderDate: '2011.10.9',
+        orderer: '건양엔지니어링',
+        status: 'Ongoing'
+      }
+    ]);
+  };
+
+  // Transaction 목록을 불러올 때마다 적용함
+  useEffect(loadList, []);
+
+  const validationTest = (
+    Array.isArray(transactions) &&
+    transactions.length > 0
+  );
+
   return (
     <BaseStack>
       <List
@@ -56,7 +85,15 @@ function TransactionList () {
           </Typography>
         }
       >
-        <TransactionItem />
+        {
+          validationTest
+            ? transactions.map((item, i) => {
+              return <TransactionItem key={i} data={item} />;
+            })
+            : <Typography>
+              You don't have any transaction yet.
+              </Typography>
+        }
       </List>
     </BaseStack>
   );
