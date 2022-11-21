@@ -15,6 +15,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
+  createRoutesFromElements,
+  Route,
   RouterProvider
 } from 'react-router-dom';
 
@@ -26,32 +28,21 @@ import Main from 'pages/Main';
 import Transaction from 'pages/Transaction';
 import App from 'App'; // 상대 경로로 되어있어서 절대경로로 변경
 
+// components
+import About from 'components/About';
+
 // Router 라우터
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    errorElement: <Error />,
-    children: [
-      {
-        path: 'contact/',
-        element: <Contact />
-      },
-      {
-        path: 'dashboard/',
-        element: <Dashboard />
-      },
-      {
-        path: 'transaction/',
-        element: <Transaction />
-      },
-      {
-        path: '/',
-        element: <Main />
-      }
-    ]
-  }
-]);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/' element={<App />} errorElement={<Error />}>
+      <Route path='contact/' element={<Contact />} />
+      <Route path='dashboard/' element={<Dashboard />} />
+      <Route path='transaction/' element={<Transaction />} />
+      <Route path='/' element={<Main />} />
+      <Route path='about/' element={<About />} />
+    </Route>
+  )
+);
 
 // 배경 및 Primary, Secondary 등등 다양한 색상을 지정하고
 // 웹페이지 전체에 Context 형태로 정해줄 수 있는 설정
