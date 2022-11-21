@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 
 function Footer (props) {
   return (
-    <AppBar position='flex' component='footer' sx={props.sx}>
+    <AppBar position='relative' component='footer' sx={props.sx}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           Footer
