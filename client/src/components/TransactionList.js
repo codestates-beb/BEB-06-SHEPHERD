@@ -3,46 +3,85 @@ Trasaction List마다 useState를 두고 컴포넌트 렌더링 타이밍에 데
 */
 
 // Modules
-import { useState, useEffect } from 'react';
-
-// icons
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import parseObject from 'features/parseObject';
+import * as schema from 'features/schema';
+import { useEffect, useState } from 'react';
 
 // Material Components
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Collapse from '@mui/material/Collapse';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
 // Custom Components
 import BaseStack from 'components/base/BaseStack';
 
 // 내부의 open state를 제외하고는 props에서 데이터를 받아 채운다.
-function TransactionItem (props) {
+function TransactionItem ({ data }) {
   const [open, setOpen] = useState(false);
+  const { id, arrival, currentLocation } = data;
 
   const handleClick = () => {
     setOpen(!open);
   };
 
   return (
-    <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemText>Item</ListItemText>
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={open} timeout='auto' unmountOnExit>
-        <List disablePadding sx={{ pl: 4 }}>
-          <ListItem>
-            <ListItemText>collapsed</ListItemText>
-          </ListItem>
-        </List>
+    <Card sx={{ display: 'flex', flexWrap: 'wrap' }}>
+      <CardHeader
+        title={<Typography variant='body1' sx={{ fontWeight: 500 }}>{`Transaction Number #${id}`}</Typography>}
+        subheader={
+          <>
+            <Typography variant='subtitle2'>Current Location : {currentLocation}</Typography>
+            <Typography variant='subtitle2'>Estimated Arrival Date : {arrival.date.toDateString()}</Typography>
+          </>
+        }
+        sx={{
+          flexGrow: 1
+        }}
+      />
+      <CardActions sx={{ p: 2 }}>
+        <Button size='medium' color='primary' onClick={handleClick}>
+          <Typography variant='body1'>Show Details</Typography>
+        </Button>
+      </CardActions>
+      <Collapse in={open} sx={{ flexBasis: '100%' }}>
+        <CardContent sx={{
+          p: 2,
+          pt: 0
+        }}
+        >
+          {
+          parseObject(data, (key, value) => {
+            if(value instanceof Date) {
+              value = value.toDateString();
+            }
 
+            return (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between'
+                }}
+                pb={1}
+              >
+                <Typography variant='subtitle2'>
+                  {key}
+                </Typography>
+                <Typography variant='body2'>
+                  {value}
+                </Typography>
+              </Box>
+            );
+          })
+          }
+        </CardContent>
       </Collapse>
-    </>
+    </Card>
   );
 }
 
@@ -52,16 +91,17 @@ function TransactionList () {
   const loadList = () => {
     setTransactions([
       {
+        id: 1,
         arrival: {
-          date: '2022.10.10',
+          date: new Date(2022, 11, 22),
           location: '대구'
         },
         currentLocation: '포항',
         departure: {
-          date: '2022.10.9',
+          date: new Date(2022, 11, 21),
           location: '포항'
         },
-        orderDate: '2011.10.9',
+        orderDate: new Date(2022, 11, 18),
         orderer: '건양엔지니어링',
         status: 'Ongoing'
       }
@@ -73,28 +113,33 @@ function TransactionList () {
 
   const validationTest = (
     Array.isArray(transactions) &&
-    transactions.length > 0
+    transactions.length > 0 &&
+    transactions.every((item) => {
+      const errors = schema.transaction.validate(item);
+      if (errors.length > 0) {
+        errors.forEach(error => console.error(error));
+      }
+      return errors.length < 1;
+    })
   );
 
   return (
     <BaseStack>
-      <List
-        subheader={
-          <Typography variant='h6'>
-            Ongoing Transaction List
-          </Typography>
-        }
-      >
-        {
+      <Typography variant='h6'>
+        Ongoing Transaction List
+      </Typography>
+
+      {
           validationTest
             ? transactions.map((item, i) => {
               return <TransactionItem key={i} data={item} />;
             })
-            : <Typography>
-              You don't have any transaction yet.
+            : (
+              <Typography>
+                You don't have any transaction yet.
               </Typography>
+              )
         }
-      </List>
     </BaseStack>
   );
 }
