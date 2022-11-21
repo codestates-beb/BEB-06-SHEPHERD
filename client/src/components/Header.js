@@ -43,7 +43,7 @@ function Header (props) {
   };
 
   return (
-    <AppBar position='flex' component='header' sx={props.sx}>
+    <AppBar position='relative' component='header' sx={props.sx}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <LocalShippingIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
