@@ -20,11 +20,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-//Login modal
-import Auth from './Auth';
-
-const pages = [{ name: ['About Us'], routeName: ['About'] }, { name: ['Contact Us'], routeName: ['Contact'] }, { name: ['Dashboard'], routeName: ['Dashboard'] }];
-const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }, { name: [<Auth />], routeName: ['Logout'] }];
+const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
+const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }, { name: ['Logout'], routeName: ['Logout'] }];
 
 function Header (props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
