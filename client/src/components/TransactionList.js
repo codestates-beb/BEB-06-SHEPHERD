@@ -30,7 +30,15 @@ function TransactionItem ({ data }) {
   };
 
   return (
-    <Card sx={{ display: 'flex', flexWrap: 'wrap' }}>
+    <Card
+      variant='outlined' sx={{
+        display: 'flex',
+        alignItems: 'stretch',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        mb: 2
+      }}
+    >
       <CardHeader
         title={<Typography variant='body1' sx={{ fontWeight: 500 }}>{`Transaction Number #${id}`}</Typography>}
         subheader={
@@ -43,7 +51,7 @@ function TransactionItem ({ data }) {
           flexGrow: 1
         }}
       />
-      <CardActions sx={{ p: 2 }}>
+      <CardActions sx={{ p: 1 }}>
         <Button size='medium' color='primary' onClick={handleClick}>
           <Typography variant='body1'>Show Details</Typography>
         </Button>
@@ -56,7 +64,7 @@ function TransactionItem ({ data }) {
         >
           {
           parseObject(data, (key, value) => {
-            if(value instanceof Date) {
+            if (value instanceof Date) {
               value = value.toDateString();
             }
 
@@ -68,6 +76,7 @@ function TransactionItem ({ data }) {
                   justifyContent: 'space-between'
                 }}
                 pb={1}
+                key={key}
               >
                 <Typography variant='subtitle2'>
                   {key}
@@ -103,7 +112,24 @@ function TransactionList () {
         },
         orderDate: new Date(2022, 11, 18),
         orderer: '건양엔지니어링',
-        status: 'Ongoing'
+        status: 'Ongoing',
+        amount: 100
+      },
+      {
+        id: 2,
+        arrival: {
+          date: new Date(2022, 11, 22),
+          location: '대구'
+        },
+        currentLocation: '포항',
+        departure: {
+          date: new Date(2022, 11, 21),
+          location: '포항'
+        },
+        orderDate: new Date(2022, 11, 18),
+        orderer: '건양엔지니어링',
+        status: 'Ongoing',
+        amount: 100
       }
     ]);
   };
@@ -125,21 +151,21 @@ function TransactionList () {
 
   return (
     <BaseStack>
-      <Typography variant='h6'>
+      <Typography variant='h5' sx={{ pb: 2 }}>
         Ongoing Transaction List
       </Typography>
 
       {
-          validationTest
-            ? transactions.map((item, i) => {
-              return <TransactionItem key={i} data={item} />;
-            })
-            : (
-              <Typography>
-                You don't have any transaction yet.
-              </Typography>
-              )
-        }
+        validationTest
+          ? transactions.map((item, i) => {
+            return <TransactionItem key={i} data={item} />;
+          })
+          : (
+            <Typography>
+              You don't have any transaction yet.
+            </Typography>
+            )
+      }
     </BaseStack>
   );
 }

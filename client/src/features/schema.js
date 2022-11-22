@@ -6,6 +6,10 @@ export const transaction = new Schema(
       type: Number,
       required: true
     },
+    amount: {
+      type: Number,
+      required: true
+    },
     arrival: {
       date: {
         type: Date,
@@ -41,6 +45,31 @@ export const transaction = new Schema(
     status: {
       type: String,
       enum: ['Ongoing', 'Ready', 'Complete'],
+      required: true
+    }
+  }
+);
+
+export const order = new Schema(
+  {
+    id: {
+      type: Number,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    from: {
+      type: String,
+      required: true
+    },
+    to: {
+      type: String,
+      required: true
+    },
+    orderer: {
+      type: String,
       required: true
     }
   }
