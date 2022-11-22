@@ -19,7 +19,6 @@ import Typography from '@mui/material/Typography';
 import ClearIcon from '@mui/icons-material/Clear';
 
 // Custom Components
-import { textAlign } from '@mui/system';
 import BaseStack from 'components/base/BaseStack';
 
 const AccordionSummary = styled((props) => (
