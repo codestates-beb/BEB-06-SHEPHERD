@@ -4,7 +4,6 @@ import Paper from '@mui/material/Paper';
 
 // Components
 import TransactionList from 'components/TransactionList';
-import OrderList from 'components/OrderList';
 import MakeOrder from 'components/MakeOrder';
 
 function Dashboard () {
