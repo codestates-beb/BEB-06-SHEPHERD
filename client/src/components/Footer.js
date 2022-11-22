@@ -7,11 +7,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 
-function Footer(props) {
-  const Heeinpark = "https://github.com/Heein-Park"
-  const GunHyunJeong = "https://github.com/gun8121"
-  const CDDWNE = "https://github.com/CDDWNE"
-  const YeonJeo = "https://github.com/yeonvv"
+function Footer (props) {
+  const Heeinpark = 'https://github.com/Heein-Park';
+  const GunHyunJeong = 'https://github.com/gun8121';
+  const CDDWNE = 'https://github.com/CDDWNE';
+  const YeonJeo = 'https://github.com/yeonvv';
 
   return (
     <AppBar position='flex' component='footer' sx={props.sx}>
@@ -36,12 +36,12 @@ function Footer(props) {
             Our Team
           </Typography>
         </Box>
-        <Stack direction="row" spacing={2}>
+        <Stack direction='row' spacing={2}>
           <GitHubIcon fontSize='large' />
-          <Button variant="contained" onClick={() => { window.open(Heeinpark) }}>Park Heein</Button>
-          <Button variant="contained" onClick={() => { window.open(GunHyunJeong) }}>Jeong Gunhyun</Button>
-          <Button variant="contained" onClick={() => { window.open(CDDWNE) }}>Choi Jinyoung</Button>
-          <Button variant="contained" onClick={() => { window.open(YeonJeo) }}>Heo YeonJeo</Button>
+          <Button variant='contained' onClick={() => { window.open(Heeinpark); }}>Park Heein</Button>
+          <Button variant='contained' onClick={() => { window.open(GunHyunJeong); }}>Jeong Gunhyun</Button>
+          <Button variant='contained' onClick={() => { window.open(CDDWNE); }}>Choi Jinyoung</Button>
+          <Button variant='contained' onClick={() => { window.open(YeonJeo); }}>Heo YeonJeo</Button>
         </Stack>
       </Toolbar>
     </AppBar>
