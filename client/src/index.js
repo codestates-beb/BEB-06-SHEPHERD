@@ -21,7 +21,6 @@ import {
 } from 'react-router-dom';
 
 // Pages
-import Contact from 'pages/Contact';
 import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
