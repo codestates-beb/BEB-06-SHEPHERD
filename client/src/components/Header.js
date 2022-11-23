@@ -11,7 +11,7 @@ import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { green } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -23,7 +23,7 @@ import Typography from '@mui/material/Typography';
 //Login modal
 import Auth from './Auth';
 
-const pages = [{ name: ['About Us'], routeName: ['About'] }, { name: ['Contact Us'], routeName: ['Contact'] }, { name: ['Dashboard'], routeName: ['Dashboard'] }];
+const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
 const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }, { name: [<Auth />], routeName: ['Logout'] }];
 
 function Header (props) {
@@ -139,7 +139,7 @@ function Header (props) {
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title='Open Menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar sx={{ bgcolor: green[0] }}>
+                <Avatar sx={{ bgcolor: grey[50] }}>
                   <AccountCircleIcon fontSize='large' />
                 </Avatar>
               </IconButton>
