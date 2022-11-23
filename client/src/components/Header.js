@@ -19,14 +19,32 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import { palette } from '@mui/system';
 
 //Login modal
-import Auth from './Auth';
+import Login from 'components/Login';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'white',
+  border: '1px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
-const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }, { name: [<Auth />], routeName: ['Logout'] }];
+const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
 
-function Header (props) {
+function Header(props) {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -160,6 +178,17 @@ function Header (props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <Button onClick={handleOpen}>Login</Button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  <Login />
+                </Box>
+              </Modal>
               {settings.map((setting, idx) => (
                 <MenuItem key={idx} onClick={handleCloseUserMenu}>
                   <Typography textAlign='center'>
