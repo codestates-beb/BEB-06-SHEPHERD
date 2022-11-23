@@ -24,7 +24,6 @@ import {
 import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
-import Transaction from 'pages/Transaction';
 import App from 'App'; 
 
 // components
@@ -34,9 +33,7 @@ import Login from 'components/Login';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<Error />}>
-      <Route path="contact/" element={<Contact />} />
       <Route path="dashboard/" element={<Dashboard />} />
-      <Route path="transaction/" element={<Transaction />} />
       <Route path="/" element={<Main />} />
       <Route path="login/" element={<Login />} />
     </Route>
