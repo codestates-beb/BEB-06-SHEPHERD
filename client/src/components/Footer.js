@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 
 function Footer(props) {
   const Heeinpark = "https://github.com/Heein-Park"
@@ -15,8 +16,8 @@ function Footer(props) {
   return (
     <AppBar position='flex' component='footer' sx={props.sx}>
       <Toolbar>
-        <Box sx={{flexGrow: 1}}>
-        <Typography
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography
             variant='h6'
             noWrap
             component='a'
@@ -31,6 +32,7 @@ function Footer(props) {
               textDecoration: 'none'
             }}
           >
+            <Diversity1Icon fontSize='large' />
             Our Team
           </Typography>
         </Box>
