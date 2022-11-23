@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 
 function Footer (props) {
   const Heeinpark = 'https://github.com/Heein-Park';
@@ -31,6 +32,7 @@ function Footer (props) {
               textDecoration: 'none'
             }}
           >
+            <Diversity1Icon fontSize='large' />
             Our Team
           </Typography>
         </Box>

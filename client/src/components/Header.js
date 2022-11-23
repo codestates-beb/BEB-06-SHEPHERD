@@ -11,7 +11,7 @@ import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { green } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -19,11 +19,31 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+//Login modal
+import Login from 'components/Login';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'white',
+  border: '0.5px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
-const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }, { name: ['Logout'], routeName: ['Logout'] }];
+const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
 
-function Header (props) {
+function Header(props) {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -136,7 +156,7 @@ function Header (props) {
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title='Open Menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar sx={{ bgcolor: green[0] }}>
+                <Avatar sx={{ bgcolor: grey[50] }}>
                   <AccountCircleIcon fontSize='large' />
                 </Avatar>
               </IconButton>
@@ -157,6 +177,17 @@ function Header (props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <Button onClick={handleOpen}>Login</Button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  <Login />
+                </Box>
+              </Modal>
               {settings.map((setting, idx) => (
                 <MenuItem key={idx} onClick={handleCloseUserMenu}>
                   <Typography textAlign='center'>
