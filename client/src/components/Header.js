@@ -20,7 +20,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { palette } from '@mui/system';
 
 //Login modal
 import Login from 'components/Login';
@@ -32,7 +31,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'white',
-  border: '1px solid #000',
+  border: '0.5px solid #000',
   boxShadow: 24,
   p: 4,
 };
