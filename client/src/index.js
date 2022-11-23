@@ -26,20 +26,20 @@ import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
 import Transaction from 'pages/Transaction';
-import App from 'App'; // 상대 경로로 되어있어서 절대경로로 변경
+import App from 'App'; 
 
 // components
-import About from 'components/About';
+import Login from 'components/Login';
 
 // Router 라우터
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/' element={<App />} errorElement={<Error />}>
-      <Route path='contact/' element={<Contact />} />
-      <Route path='dashboard/' element={<Dashboard />} />
-      <Route path='transaction/' element={<Transaction />} />
-      <Route path='/' element={<Main />} />
-      <Route path='about/' element={<About />} />
+    <Route path="/" element={<App />} errorElement={<Error />}>
+      <Route path="contact/" element={<Contact />} />
+      <Route path="dashboard/" element={<Dashboard />} />
+      <Route path="transaction/" element={<Transaction />} />
+      <Route path="/" element={<Main />} />
+      <Route path="login/" element={<Login />} />
     </Route>
   )
 );
