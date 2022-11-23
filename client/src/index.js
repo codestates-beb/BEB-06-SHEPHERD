@@ -42,7 +42,7 @@ const router = createBrowserRouter(
       <Route path="login/" element={<Login />} />
     </Route>
   )
-)
+);
 
 // 배경 및 Primary, Secondary 등등 다양한 색상을 지정하고
 // 웹페이지 전체에 Context 형태로 정해줄 수 있는 설정

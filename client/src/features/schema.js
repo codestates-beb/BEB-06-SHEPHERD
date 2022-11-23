@@ -2,8 +2,19 @@ import Schema from 'validate';
 
 export const transaction = new Schema(
   {
+    id: {
+      type: Number,
+      required: true
+    },
+    amount: {
+      type: Number,
+      required: true
+    },
     arrival: {
-      date: '2022.10.10',
+      date: {
+        type: Date,
+        required: true
+      },
       location: {
         type: String,
         required: true
@@ -14,13 +25,19 @@ export const transaction = new Schema(
       required: true
     },
     departure: {
-      date: '2022.10.9',
+      date: {
+        type: Date,
+        required: true
+      },
       location: {
         type: String,
         required: true
       }
     },
-    orderDate: '2011.10.9',
+    orderDate: {
+      type: Date,
+      required: true
+    },
     orderer: {
       type: String,
       required: true
@@ -28,6 +45,31 @@ export const transaction = new Schema(
     status: {
       type: String,
       enum: ['Ongoing', 'Ready', 'Complete'],
+      required: true
+    }
+  }
+);
+
+export const order = new Schema(
+  {
+    id: {
+      type: Number,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    from: {
+      type: String,
+      required: true
+    },
+    to: {
+      type: String,
+      required: true
+    },
+    orderer: {
+      type: String,
       required: true
     }
   }
