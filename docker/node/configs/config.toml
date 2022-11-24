@@ -1,0 +1,12 @@
+# Valid TOML config file
+data-path="data" # Path
+discovery-enabled=true
+
+# Chain
+genesis-file="genesis.json" # Path to the custom genesis file
+
+# RPC
+rpc-http-enabled=true
+rpc-http-api=["ETH","NET","QBFT"]
+host-allowlist=["*"]
+rpc-http-cors-origins=["*"]
