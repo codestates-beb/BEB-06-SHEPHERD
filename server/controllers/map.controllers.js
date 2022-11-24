@@ -1,3 +1,3 @@
-const status = async (req, res) => {};
+// const status = async (req, res) => {};
 
-module.exports = status;
+// module.exports = status;
