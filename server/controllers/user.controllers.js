@@ -67,7 +67,6 @@ const join = async (req, res, next) => {
   userData.account = new_address;
 
   const newUser = new User(userData);
-
   try {
     await newUser.save();
   } catch (err) {
@@ -93,20 +92,69 @@ const join = async (req, res, next) => {
       return next(error);
     }
   }
-
   userData["privateKey"] = privateKey;
   console.log(userData);
 
   res.status(201).json({
-    "환영합니다!": newUser.name,
-    "거래 계정": newUser.account,
-    주소: newUser.address,
-    "발주처 계정": newUser.sendOrder,
-    "수주처 계정": newUser.takeOrder,
+    name: newUser.name,
+    account: newUser.account,
+    address: newUser.address,
+    sendOrder: newUser.sendOrder,
+    takeOrder: newUser.takeOrder,
   });
 };
 
-const login = async (req, res) => {};
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email });
+  } catch (err) {
+    const error = new HttpError("다시 시도해주세요", 500);
+    return next(error);
+  }
+
+  if (!existingUser) {
+    const error = new HttpError("정보를 다시 확인해주세요", 403);
+    return next(error);
+  }
+
+  let isValidPassword = false;
+  try {
+    isValidPassword = await bcrypt.compare(password, existingUser.password); // 해싱값 비교
+  } catch (err) {
+    const error = new HttpError("비밀번호를 확인해주세요", 500);
+    return next(error);
+  }
+
+  if (!isValidPassword) {
+    const error = new HttpError("정보를 다시 확인해주세요", 403);
+    return next(error);
+  }
+
+  if (existingUser != null) {
+    let accessToken;
+    let refreshToken;
+    try {
+      accessToken = jwt.sign({ existingUser }, process.env.ACCESS_SECRET, {
+        expiresIn: "1h",
+      });
+      refreshToken = jwt.sign({ existingUser }, process.env.REFRESH_SECRET, {
+        expiresIn: "1h",
+      });
+      res.cookie("refreshToken", refreshToken);
+    } catch (err) {
+      console.log(err);
+      const error = new HttpError("접근에 실패했습니다", 500);
+      return next(error);
+    }
+  }
+
+  res.status(201).json({
+    message: "환영합니다",
+  });
+};
 
 const sendOrder = async (req, res) => {};
 
