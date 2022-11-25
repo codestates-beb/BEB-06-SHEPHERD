@@ -1,7 +1,7 @@
 FROM hyperledger/besu:latest
 USER besu
-COPY ./genesis.json ./
+RUN mkdir configs
 RUN mkdir data
-RUN --mount=type=bind,source='$(pwd)'/configs,target=/opt/besu/configs
-CMD [ "--config-file=/configs/config.toml" ]
+COPY ./configs/config.toml ./configs
+COPY ./data/genesis.json ./data
 ENTRYPOINT ["besu"]

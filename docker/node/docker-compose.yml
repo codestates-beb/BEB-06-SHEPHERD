@@ -1,14 +1,7 @@
 services:
-  steeltracker:
-    container_name: ubuntu/besu
+  genesis-generator:
+    container_name: genesis-generator
     image: "hyperledger/besu:latest"
-    ports:
-      - "30303:30303/udp"
-      - "30303:30303/tcp"
-      - "127.0.0.1:8545:8545"
-      - "127.0.0.1:8551:8551"
-      - "127.0.0.1:8086:8086"
-    expose: ["8545", "8551"]
     volumes:
       - type: bind
         source: ./data
@@ -17,6 +10,23 @@ services:
       - type: bind
         source: ./configs
         target: /opt/besu/configs
-        read_only: false
+        read_only: true
+    command: [ "operator", "generate-blockchain-config", "--config-file=configs/networkConfig.json", "--to=data", "--private-key-file-name=key" ]
     entrypoint:
-      - "bash"
+      - "besu"
+  node:
+    container_name: node
+    image: "hyperledger/besu:latest"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "30303:30303/udp"
+      - "30303:30303/tcp"
+      - "127.0.0.1:8545:8545"
+      - "127.0.0.1:8551:8551"
+      - "127.0.0.1:8086:8086"
+    expose: ["8545", "8551"]
+    command: [ "--config-file=configs/config.toml" ]
+    entrypoint:
+      - "besu"
