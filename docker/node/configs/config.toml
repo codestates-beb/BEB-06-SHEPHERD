@@ -3,7 +3,7 @@ data-path="data" # Path
 discovery-enabled=true
 
 # Chain
-genesis-file="genesis.json" # Path to the custom genesis file
+genesis-file="data/genesis.json" # Path to the custom genesis file
 
 # RPC
 rpc-http-enabled=true
