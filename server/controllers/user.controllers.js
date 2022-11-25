@@ -9,7 +9,20 @@ require("dotenv").config();
 const Web3 = require("web3");
 const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545")); // 가나슈와 연동(로컬)
 
-const userInfo = async (req, res) => {};
+const userInfo = async (req, res, next) => {
+  let user;
+  try {
+    user = await User.findOne({ _id: req.params.uid });
+  } catch (err) {
+    const error = new HttpError("존재하지 않는 사용자입니다", 500);
+    return next(error);
+  }
+
+  delete Object.entries(user)[2][1].password;
+  delete Object.entries(user)[2][1]._id;
+
+  res.status(200).json(user);
+};
 
 const join = async (req, res, next) => {
   const { name, email, password, address, sendOrder, takeOrder } = req.body;
