@@ -1,5 +1,5 @@
 FROM hyperledger/besu:latest
 USER besu
-COPY ./configs/node.toml ./configs
-COPY ./data/genesis.json ./data
+ADD ./configs/node.toml ./configs
+ADD ./data/genesis.json ./
 ENTRYPOINT ["besu"]

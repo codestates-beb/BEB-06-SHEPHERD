@@ -25,9 +25,63 @@ services:
       - "30303:30303/tcp"
       - "127.0.0.1:8545:8545"
       - "127.0.0.1:8551:8551"
-      - "127.0.0.1:8086:8086"
-    expose: ["8545", "8551"]
-    command: [ "--config-file=configs/node.toml" ]
+    volumes:
+      - type: bind
+        source: ./data/keys/0x54ed491bbc0173fdcb0bec90800a3851410e0fa6
+        target: /opt/besu/data
+        read_only: false
+    expose: ["8545", "8551", "30303"]
+    command: [ "--config-file=configs/node.toml", "--p2p-host=211.226.71.14" ]
     entrypoint:
       - "besu"
-
+  peer1:
+    container_name: peer1
+    image: "hyperledger/besu:latest"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "30304:30304/udp"
+      - "30304:30304/tcp"
+    volumes:
+      - type: bind
+        source: ./data/keys/0x299f40da505dacdd7f97fa39bc71beb36ff7a0b1
+        target: /opt/besu/data
+        read_only: false
+    command: [ "--config-file=configs/node.toml", "--bootnodes=enode://90ffbb8e9e23805467357c77c475117a2b067266cb8f72eee1dc3e7fa69f6ff5560902668b936eae3149b0eced550da22e1b6aa48285d2fdd4faa52fdb55d94e@211.226.71.14:30303" ]
+    entrypoint:
+      - "besu"
+  peer2:
+    container_name: peer2
+    image: "hyperledger/besu:latest"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "30305:30305/udp"
+      - "30305:30305/tcp"
+    volumes:
+      - type: bind
+        source: ./data/keys/0xd124f925962e1a21ebaf7f866367f646b4529072
+        target: /opt/besu/data
+        read_only: false
+    command: [ "--config-file=configs/node.toml", "--bootnodes=enode://90ffbb8e9e23805467357c77c475117a2b067266cb8f72eee1dc3e7fa69f6ff5560902668b936eae3149b0eced550da22e1b6aa48285d2fdd4faa52fdb55d94e@211.226.71.14:30303" ]
+    entrypoint:
+      - "besu"
+  peer3:
+    container_name: peer3
+    image: "hyperledger/besu:latest"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "30306:30306/udp"
+      - "30306:30306/tcp"
+    volumes:
+      - type: bind
+        source: ./data/keys/0xdc3e53cfd56a8518c8faf690dfe23e0e56faa0e1
+        target: /opt/besu/data
+        read_only: false
+    command: [ "--config-file=configs/node.toml", "--bootnodes=enode://90ffbb8e9e23805467357c77c475117a2b067266cb8f72eee1dc3e7fa69f6ff5560902668b936eae3149b0eced550da22e1b6aa48285d2fdd4faa52fdb55d94e@211.226.71.14:30303" ]
+    entrypoint:
+      - "besu"
