@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const routes = require("./routes");
 
@@ -16,6 +17,13 @@ app.use(bodyParser.json());
 
 app.use("/", routes);
 
-module.exports = app.listen(PORT, () => {
-  console.log(`[server🚀️]... http://localhost:${PORT}`);
-});
+mongoose
+  .connect(process.env.DB_HOST)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`[server🚀️]...http://localhost${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
