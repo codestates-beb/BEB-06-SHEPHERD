@@ -147,6 +147,8 @@ const login = async (req, res, next) => {
   }
 
   if (existingUser != null) {
+    delete Object.entries(existingUser)[2][1].password;
+
     let accessToken;
     let refreshToken;
     try {
