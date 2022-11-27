@@ -7,6 +7,6 @@ genesis-file="genesis.json"
 
 # RPC
 rpc-http-enabled=true
-rpc-http-api=["ETH","NET","QBFT"]
+rpc-http-api=["ETH","NET","QBFT","ADMIN"]
 host-allowlist=["*"]
 rpc-http-cors-origins=["*"]

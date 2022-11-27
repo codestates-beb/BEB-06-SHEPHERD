@@ -14,30 +14,77 @@ services:
     command: [ "operator", "generate-blockchain-config", "--config-file=configs/networkConfig.json", "--to=data", "--private-key-file-name=key" ]
     entrypoint:
       - "besu"
+
   node:
     container_name: node
+    hostname: node
     image: "hyperledger/besu:latest"
     ports:
-      - "30303:30303/udp"
-      - "30303:30303/tcp"
-      - "127.0.0.1:8545:8545"
-      - "127.0.0.1:8551:8551"
+      - "127.0.0.1:30303:30303/udp"
+      - "127.0.0.1:30303:30303/tcp"
+      - "127.0.0.1:8545:8545/udp"
+      - "127.0.0.1:8545:8545/tcp"
     expose: ["8545", "8551", "30303"]
     volumes:
       - type: bind
-        source: ./data/genesis.json
+        source: ./network/genesis.json
         target: /opt/besu/genesis.json
         read_only: true
       - type: bind
         source: ./configs/node.toml
         target: /opt/besu/configs/node.toml
         read_only: true
-    command: [ "--config-file=configs/node.toml", "--p2p-host=211.226.71.14" ]
+      - type: bind
+        source: ./network/alpha/
+        target: /opt/besu/data/
+        read_only: false
+    networks:
+      peers:
+        ipv4_address: 172.20.0.2
+    command:
+      - "--config-file=configs/node.toml"
+      - "--p2p-port=30303"
+      - "--rpc-http-port=8545"
     entrypoint:
       - "besu"
+
   peer:
-    container_name: peer1
+    container_name: peer
+    hostname: peer
     image: "hyperledger/besu:latest"
-    command: [ "--config-file=configs/node.toml" ]
+    ports:
+      - "127.0.0.1:30304:30304/udp"
+      - "127.0.0.1:30304:30304/tcp"
+      - "127.0.0.1:8546:8546/udp"
+      - "127.0.0.1:8546:8546/tcp"
+    expose: ["8546", "8552", "30304"]
+    volumes:
+      - type: bind
+        source: ./network/genesis.json
+        target: /opt/besu/genesis.json
+        read_only: true
+      - type: bind
+        source: ./configs/node.toml
+        target: /opt/besu/configs/node.toml
+        read_only: true
+      - type: bind
+        source: ./network/beta/
+        target: /opt/besu/data/
+        read_only: false
+    networks:
+      peers:
+        ipv4_address: 172.20.0.3
+    command:
+      - "--config-file=configs/node.toml"
+      - "--p2p-port=30304"
+      - "--rpc-http-port=8546"
+      - "--bootnodes=enode://ce0149fb44d24168aaba464b43301b57918ba409050389a987741050cdb27c28b08e8ef2f02c5f2fc0fcd95e9b72f9f52674a1cdf23fcf4541937470008f6a01@172.20.0.2:30303"
     entrypoint:
       - "besu"
+
+networks:
+  peers:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24
