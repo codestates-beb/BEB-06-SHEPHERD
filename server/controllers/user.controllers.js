@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user.models");
+const faucet = require("../services/web3/faucet")
 
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -171,7 +172,35 @@ const login = async (req, res, next) => {
   });
 };
 
-const sendOrder = async (req, res) => {};
+// faucet (new_address);
+
+// const faucet = async (req, res) => {
+//   const data = req.body;
+//   const userAddress = data.address;
+//   const faucetAddress = process.env.FAUCET_ADDRESS;
+//   const faucetPK = process.env.FAUCET_PK;
+
+//   const tx = {
+//     from: faucetAddress,
+//     to: userAddress,
+//     gas: 2000000,
+//     value: web3.utils.toWei("0.1", "ether"),
+//   };
+//   const signedTx = web3.eth.accounts.signTransaction(tx, faucetPK)
+//     .then((signedTx) => {
+//       const sendPromise = web3.eth.sendSignedTransaction(signedTx.rawTransaction, 
+//           async (err, res) => {
+//           if (err) {
+//             console.log("transaction fail:", err);
+//           } else {
+//             const balance = await web3.eth.getBalance(userAddress);
+//             console.log(`transfer to user: ${userAddress} || 0.1 ETH`);
+//             console.log(`balance: ${balance}`)
+//           };
+//         })
+//     });
+//     res.send(`0.1 eth sent: ${userAddress}`);
+// };
 
 module.exports = {
   userInfo,
