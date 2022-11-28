@@ -8,6 +8,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 6 },
   account: { type: String, required: true },
+  gas_amount: { type: String, required: true },
   address: { type: String, required: true },
   sendOrder: { type: String, required: true },
   takeOrder: { type: String, required: true },
