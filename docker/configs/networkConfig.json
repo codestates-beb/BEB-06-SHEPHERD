@@ -1,7 +1,7 @@
 {
   "genesis": {
     "config": {
-        "chainid": 33340,
+        "chainid": 1337,
         "londonBlock": 0,
         "zeroBaseFee": true,
         "qbft": {
