@@ -38,7 +38,7 @@ function BaseLayout (props) {
       >
         {props.children}
       </Container>
-      <Footer sx={{ flexShrink: 1 }} />
+      <Footer sx={{ flexShrink: 1, pt: 1, pb: 1 }} />
     </Stack>
   );
 }
