@@ -5,23 +5,14 @@
 - docker
 
 ## How to
-genesis.json이 없다면 genesis-generator를 실행하여 로컬폴더에 생성합니다.
-```
-docker compose start node
-```
+docker-compose.yml이 있는 폴더에 들어간 뒤
+data 폴더 안에 key와 key.pub, 그리고 genesis.json을 추가합니다
 
-cli 도구로 docker/node 폴더에 들어간 뒤 아래 명령어를 실행합니다.
-```
-docker compose build
-docker compose compose
-```
+docker compose up node 명령어를 실행하면
+호스트 컴퓨터의 30303 포트로 p2p 통신을 받고, 0.0.0.0:8545로 JSON-RPC API를 접근할 수 있는 이더리움 노드가 생성됩니다.
 
-이후 node container를 실행합니다.
-```
-docker compose start node
-```
+실행이 되는지 확인한 뒤에는 configs폴더로 들어가서 node.toml 파일에 들어가
+bootnodes=(enode 주소)를 새로 기입해주세요.
 
-cli 도구로 node container의 로그를 확인하고 싶다면 아래 명령어를 실행합니다.
-```
-docker attach node
-```
+이후 실행 중인 container를 멈추시고 다시 docker compose up node -d를 실행해주세요.
+백그라운드로 도커 이미지를 실행하게 됩니다.
