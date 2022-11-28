@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
 const GithubButton = styled(Button)(({ theme }) => ({
-  flexBasis: '180px',
+  flexBasis: { xs: '120px', md: '160px' },
   margin: 4
 }));
 
@@ -25,7 +25,7 @@ function Footer (props) {
         <Box sx={{
           alignContent: 'center',
           alignItems: 'center',
-          display: { xs: 'none', sm: 'none', md: 'flex' },
+          display: { xs: 'none', md: 'flex' },
           flexDirection: 'row',
           flexWrap: 'nowrap',
           justifyContent: 'flex-start'
