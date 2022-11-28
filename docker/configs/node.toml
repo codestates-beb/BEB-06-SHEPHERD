@@ -5,8 +5,12 @@ discovery-enabled=true
 # Chain
 genesis-file="genesis.json"
 
+# p2p
+p2p-port=30303
+
 # RPC
 rpc-http-enabled=true
 rpc-http-api=["ETH","NET","QBFT","ADMIN"]
 host-allowlist=["*"]
 rpc-http-cors-origins=["*"]
+rpc-http-port=8545
