@@ -1,6 +1,7 @@
 # Valid TOML config file
 data-path="data" # Path
 discovery-enabled=true
+node-private-key-file="./keys/key"
 
 # Chain
 genesis-file="genesis.json"
