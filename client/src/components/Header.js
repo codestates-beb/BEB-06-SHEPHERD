@@ -16,12 +16,12 @@ import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Modal from '@mui/material/Modal';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 
-//Login modal
+// Login modal
 import Login from 'components/Login';
 
 const style = {
@@ -33,13 +33,42 @@ const style = {
   bgcolor: 'white',
   border: '0.5px solid #000',
   boxShadow: 24,
-  p: 4,
+  p: 4
 };
 
 const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
 const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
 
-function Header(props) {
+// Custom Logo Box
+const Logo = () => (
+  <Box sx={{
+    display: 'flex',
+    flexWrap: 'nowrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  }}
+  >
+    <LocalShippingIcon sx={{ mr: 2 }} />
+    <Typography
+      variant='h6'
+      noWrap
+      component='a'
+      href='/'
+      sx={{
+        mr: 2,
+        fontFamily: 'monospace',
+        fontWeight: 700,
+        letterSpacing: '.3rem',
+        color: 'inherit',
+        textDecoration: 'none'
+      }}
+    >
+      Shepherd
+    </Typography>
+  </Box>
+);
+
+function Header (props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -66,25 +95,7 @@ function Header(props) {
     <AppBar position='relative' component='header' sx={props.sx}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <LocalShippingIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant='h6'
-            noWrap
-            component='a'
-            href='/'
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
-            }}
-          >
-            STEEL TRACKER
-          </Typography>
-
+          <Logo />
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
@@ -123,37 +134,18 @@ function Header(props) {
               ))}
             </Menu>
           </Box>
-          <LocalShippingIcon sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant='h5'
-            noWrap
-            component='a'
-            href=''
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
-            }}
-          >
-            STEEL TRACKER
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, idx) => (
               <Button
                 key={idx}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ color: 'white' }}
               >
-                <Link style={{textDecoration: "none", color: "white"}} to={`/${page.routeName}`}>{page.name}</Link>
+                <Link style={{ textDecoration: 'none', color: 'white' }} to={`/${page.routeName}`}>{page.name}</Link>
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open Menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar sx={{ bgcolor: grey[50] }}>
@@ -181,8 +173,8 @@ function Header(props) {
               <Modal
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                aria-labelledby='modal-modal-title'
+                aria-describedby='modal-modal-description'
               >
                 <Box sx={style}>
                   <Login />
