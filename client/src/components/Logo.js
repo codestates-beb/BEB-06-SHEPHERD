@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Link from '@mui/material/Typography';
 import { Link as RouterLink } from 'react-router-dom';
 
