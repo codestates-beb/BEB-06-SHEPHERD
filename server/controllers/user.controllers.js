@@ -167,8 +167,20 @@ const login = async (req, res, next) => {
       return next(error);
     }
   }
+
+  // 사용자 정보 반환
+  let user;
+  try {
+    // 몽구스를 통해 사용자 정보를 반환하되, email과 name, account, uid, sendOrder, takeOrder만 보이게 합니다.
+    user = await User.findOne({ email }, 'email name account uid sendOrder takeOrder');
+  } catch (err) {
+    const error = new HttpError('접근에 실패했습니다', 500);
+    return next(error);
+  }
+
   res.status(201).json({
-    message: '환영합니다'
+    message: '환영합니다',
+    user
   });
 };
 
