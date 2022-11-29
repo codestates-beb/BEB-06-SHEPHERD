@@ -169,17 +169,9 @@ function Header (props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Button onClick={handleOpen}>Login</Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby='modal-modal-title'
-                aria-describedby='modal-modal-description'
-              >
-                <Box sx={style}>
-                  <Login />
-                </Box>
-              </Modal>
+              <MenuItem onClick={handleOpen}>
+                <Typography variant='button' color={(theme) => theme.palette.primary.main}>Login</Typography>
+              </MenuItem>
               {settings.map((setting, idx) => (
                 <MenuItem key={idx} onClick={handleCloseUserMenu}>
                   <Typography textAlign='center'>
@@ -190,6 +182,18 @@ function Header (props) {
             </Menu>
           </Box>
         </Toolbar>
+        {/* 모달을 메뉴 안에 넣으면, 특정 키를 눌렀을 때 lose focuse하는 문제가 발생함 */}
+        {/* 그래서 메뉴 밖으로 꺼내옴 */}
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <Box sx={style}>
+            <Login />
+          </Box>
+        </Modal>
       </Container>
     </AppBar>
   );
