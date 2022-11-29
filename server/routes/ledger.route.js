@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const ledgerController = require("../controllers/ledger.controllers");
+const ledgerController = require('../controllers/ledger.controllers');
 
-const router = require("express").Router();
+const router = require('express').Router();
 
 module.exports = router;
