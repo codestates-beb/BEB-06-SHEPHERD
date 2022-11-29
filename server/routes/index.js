@@ -1,11 +1,9 @@
-const user = require("./user.route");
-const main = require("./main.route");
-const map = require("./map.route");
+const user = require('./user.route');
+const main = require('./main.route');
 
-const router = require("express").Router();
+const router = require('express').Router();
 
-router.use("/user", user);
-router.use("/", main);
-router.use("/map", map);
+router.use('/user', user);
+router.use('/', main);
 
 module.exports = router;
