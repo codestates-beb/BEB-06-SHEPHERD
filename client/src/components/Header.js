@@ -21,8 +21,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-// Login modal
+// Components
 import Login from 'components/Login';
+import Logo from 'components/Logo';
 
 const style = {
   position: 'absolute',
@@ -38,35 +39,6 @@ const style = {
 
 const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
 const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
-
-// Custom Logo Box
-const Logo = () => (
-  <Box sx={{
-    display: 'flex',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  }}
-  >
-    <LocalShippingIcon sx={{ mr: 2 }} />
-    <Typography
-      variant='h6'
-      noWrap
-      component='a'
-      href='/'
-      sx={{
-        mr: 2,
-        fontFamily: 'monospace',
-        fontWeight: 700,
-        letterSpacing: '.3rem',
-        color: 'inherit',
-        textDecoration: 'none'
-      }}
-    >
-      Shepherd
-    </Typography>
-  </Box>
-);
 
 function Header (props) {
   const [open, setOpen] = useState(false);
@@ -95,7 +67,19 @@ function Header (props) {
     <AppBar position='relative' component='header' sx={props.sx}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <Logo />
+          <Logo to='/'>
+            <LocalShippingIcon sx={{ mr: 2 }} />
+            <Typography
+              variant='h6'
+              sx={{
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem'
+              }}
+            >
+              Shepherd
+            </Typography>
+          </Logo>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
