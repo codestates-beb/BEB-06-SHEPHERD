@@ -2,13 +2,12 @@ const bcrypt = require("bcryptjs");
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user.models");
-const faucet = require("../services/web3/faucet")
 
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const Web3 = require("web3");
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545")); // 가나슈와 연동(로컬)
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
 const userInfo = async (req, res, next) => {
   let user;
@@ -70,6 +69,7 @@ const join = async (req, res, next) => {
     email,
     password: hashedPassword, // 해싱값
     account: "",
+    gas_amount: "0",
     address,
     sendOrder,
     takeOrder,
@@ -159,6 +159,7 @@ const login = async (req, res, next) => {
       refreshToken = jwt.sign({ existingUser }, process.env.REFRESH_SECRET, {
         expiresIn: "1h",
       });
+      console.log(refreshToken);
       res.cookie("refreshToken", refreshToken);
     } catch (err) {
       console.log(err);
@@ -166,45 +167,13 @@ const login = async (req, res, next) => {
       return next(error);
     }
   }
-
   res.status(201).json({
     message: "환영합니다",
   });
 };
 
-// faucet (new_address);
-
-// const faucet = async (req, res) => {
-//   const data = req.body;
-//   const userAddress = data.address;
-//   const faucetAddress = process.env.FAUCET_ADDRESS;
-//   const faucetPK = process.env.FAUCET_PK;
-
-//   const tx = {
-//     from: faucetAddress,
-//     to: userAddress,
-//     gas: 2000000,
-//     value: web3.utils.toWei("0.1", "ether"),
-//   };
-//   const signedTx = web3.eth.accounts.signTransaction(tx, faucetPK)
-//     .then((signedTx) => {
-//       const sendPromise = web3.eth.sendSignedTransaction(signedTx.rawTransaction, 
-//           async (err, res) => {
-//           if (err) {
-//             console.log("transaction fail:", err);
-//           } else {
-//             const balance = await web3.eth.getBalance(userAddress);
-//             console.log(`transfer to user: ${userAddress} || 0.1 ETH`);
-//             console.log(`balance: ${balance}`)
-//           };
-//         })
-//     });
-//     res.send(`0.1 eth sent: ${userAddress}`);
-// };
-
 module.exports = {
   userInfo,
   join,
   login,
-  sendOrder,
 };
