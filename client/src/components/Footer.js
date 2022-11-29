@@ -8,6 +8,9 @@ import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
+// Components
+import Logo from 'components/Logo';
+
 const GithubButton = styled(Button)(({ theme }) => ({
   flexBasis: { xs: '120px', md: '160px' },
   margin: 4
@@ -20,35 +23,35 @@ function Footer (props) {
   const YeonJeo = 'https://github.com/yeonvv';
 
   return (
-    <AppBar position='flex' component='footer' sx={props.sx}>
+    <AppBar position='relative' component='footer' sx={props.sx}>
       <Toolbar>
-        <Box sx={{
-          alignContent: 'center',
-          alignItems: 'center',
-          display: { xs: 'none', md: 'flex' },
-          flexDirection: 'row',
-          flexWrap: 'nowrap',
-          justifyContent: 'flex-start'
-        }}
-        >
-          <Diversity1Icon fontSize='large' sx={{ mr: 2 }} />
-          <Typography
-            variant='h6'
-            noWrap
-            component='a'
-            href='/'
-            sx={{
-              color: 'inherit',
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.1rem',
-              mr: 2,
-              textDecoration: 'none'
-            }}
+        <Logo>
+          <Box sx={{
+            alignContent: 'center',
+            alignItems: 'center',
+            display: { xs: 'none', md: 'flex' },
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            justifyContent: 'flex-start'
+          }}
           >
-            Our Team
-          </Typography>
-        </Box>
+            <Diversity1Icon fontSize='large' sx={{ mr: 2 }} />
+            <Typography
+              variant='h6'
+              noWrap
+              sx={{
+                color: 'inherit',
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.1rem',
+                mr: 2,
+                textDecoration: 'none'
+              }}
+            >
+              Our Team
+            </Typography>
+          </Box>
+        </Logo>
 
         <Stack
           direction='row'
