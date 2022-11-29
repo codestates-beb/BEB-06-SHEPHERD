@@ -1,6 +1,6 @@
 // Modules
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // Material UI
@@ -47,6 +47,11 @@ function Header (props) {
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+
+  useEffect(() => {
+    handleCloseUserMenu();
+    handleCloseNavMenu();
+  }, [open]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -175,7 +180,7 @@ function Header (props) {
           aria-describedby='modal-modal-description'
         >
           <Box sx={style}>
-            <Login />
+            <Login handleClose={handleClose} />
           </Box>
         </Modal>
       </Container>
