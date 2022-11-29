@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const Web3 = require("web3");
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545")); // 가나슈와 연동(로컬)
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
 const userInfo = async (req, res, next) => {
   let user;
@@ -69,6 +69,7 @@ const join = async (req, res, next) => {
     email,
     password: hashedPassword, // 해싱값
     account: "",
+    gas_amount: "0",
     address,
     sendOrder,
     takeOrder,
@@ -158,6 +159,7 @@ const login = async (req, res, next) => {
       refreshToken = jwt.sign({ existingUser }, process.env.REFRESH_SECRET, {
         expiresIn: "1h",
       });
+      console.log(refreshToken);
       res.cookie("refreshToken", refreshToken);
     } catch (err) {
       console.log(err);
@@ -165,17 +167,13 @@ const login = async (req, res, next) => {
       return next(error);
     }
   }
-
   res.status(201).json({
     message: "환영합니다",
   });
 };
 
-const sendOrder = async (req, res) => {};
-
 module.exports = {
   userInfo,
   join,
   login,
-  sendOrder,
 };
