@@ -46,7 +46,9 @@ const Login = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
+          height: '100%',
+          justifyContent: 'center'
         }}
       >
         <Stack
