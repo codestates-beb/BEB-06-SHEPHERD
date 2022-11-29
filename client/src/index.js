@@ -24,7 +24,7 @@ import {
 import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
-import App from 'App'; 
+import App from 'App';
 
 // components
 import Login from 'components/Login';
@@ -32,13 +32,13 @@ import Login from 'components/Login';
 // Router 라우터
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />} errorElement={<Error />}>
-      <Route path="dashboard/" element={<Dashboard />} />
-      <Route path="/" element={<Main />} />
-      <Route path="login/" element={<Login />} />
+    <Route path='/' element={<App />} errorElement={<Error />}>
+      <Route path='dashboard/' element={<Dashboard />} />
+      <Route path='/' element={<Main />} />
+      <Route path='login/' element={<Login />} />
     </Route>
   )
-)
+);
 
 // 배경 및 Primary, Secondary 등등 다양한 색상을 지정하고
 // 웹페이지 전체에 Context 형태로 정해줄 수 있는 설정
@@ -49,6 +49,13 @@ const theme = createTheme({
         root: ({ theme }) => ({
           minHeight: '2em',
           backgroundColor: theme.palette.primary.light
+        })
+      }
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.grey[100]
         })
       }
     }

@@ -27,7 +27,7 @@ function BaseLayout (props) {
       spacing={0}
       sx={fullScreenHeightStyle}
     >
-      <Header sx={{ flexShrink: 1 }} />
+      <Header sx={{ flexShrink: 1, pt: 1, pb: 1 }} />
       <Container sx={{
         flexGrow: 1,
         display: 'flex',
@@ -38,7 +38,7 @@ function BaseLayout (props) {
       >
         {props.children}
       </Container>
-      <Footer sx={{ flexShrink: 1 }} />
+      <Footer sx={{ flexShrink: 1, pt: 1, pb: 1 }} />
     </Stack>
   );
 }
