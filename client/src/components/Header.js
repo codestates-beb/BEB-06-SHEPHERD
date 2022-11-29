@@ -21,8 +21,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-// Login modal
+// Components
 import Login from 'components/Login';
+import Logo from 'components/Logo';
 
 const style = {
   position: 'absolute',
@@ -38,35 +39,6 @@ const style = {
 
 const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
 const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
-
-// Custom Logo Box
-const Logo = () => (
-  <Box sx={{
-    display: 'flex',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  }}
-  >
-    <LocalShippingIcon sx={{ mr: 2 }} />
-    <Typography
-      variant='h6'
-      noWrap
-      component='a'
-      href='/'
-      sx={{
-        mr: 2,
-        fontFamily: 'monospace',
-        fontWeight: 700,
-        letterSpacing: '.3rem',
-        color: 'inherit',
-        textDecoration: 'none'
-      }}
-    >
-      Shepherd
-    </Typography>
-  </Box>
-);
 
 function Header (props) {
   const [open, setOpen] = useState(false);
@@ -95,7 +67,19 @@ function Header (props) {
     <AppBar position='relative' component='header' sx={props.sx}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <Logo />
+          <Logo to='/'>
+            <LocalShippingIcon sx={{ mr: 2 }} />
+            <Typography
+              variant='h6'
+              sx={{
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem'
+              }}
+            >
+              Shepherd
+            </Typography>
+          </Logo>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
@@ -169,17 +153,9 @@ function Header (props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Button onClick={handleOpen}>Login</Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby='modal-modal-title'
-                aria-describedby='modal-modal-description'
-              >
-                <Box sx={style}>
-                  <Login />
-                </Box>
-              </Modal>
+              <MenuItem onClick={handleOpen}>
+                <Typography variant='button' color={(theme) => theme.palette.primary.main}>Login</Typography>
+              </MenuItem>
               {settings.map((setting, idx) => (
                 <MenuItem key={idx} onClick={handleCloseUserMenu}>
                   <Typography textAlign='center'>
@@ -190,6 +166,18 @@ function Header (props) {
             </Menu>
           </Box>
         </Toolbar>
+        {/* 모달을 메뉴 안에 넣으면, 특정 키를 눌렀을 때 lose focuse하는 문제가 발생함 */}
+        {/* 그래서 메뉴 밖으로 꺼내옴 */}
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <Box sx={style}>
+            <Login />
+          </Box>
+        </Modal>
       </Container>
     </AppBar>
   );
