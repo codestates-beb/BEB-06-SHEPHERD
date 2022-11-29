@@ -74,3 +74,16 @@ export const order = new Schema(
     }
   }
 );
+
+export const user = new Schema(
+  {
+    id: {
+      type: String,
+      required: true
+    },
+    password: {
+      type: String,
+      required: true
+    }
+  }
+);
