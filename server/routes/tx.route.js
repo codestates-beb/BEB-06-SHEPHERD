@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-const orderController = require("../controllers/tx.controllers");
+const orderController = require('../controllers/tx.controllers');
 
-const router = require("express").Router();
+const router = require('express').Router();
 
-router.post("/sendZ", orderController.sendZ);
-router.post("/sendX", orderController.sendX);
+router.post('/sendZ', orderController.sendZ);
+router.post('/sendX', orderController.sendX);
 
 module.exports = router;
