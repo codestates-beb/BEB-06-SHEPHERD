@@ -1,6 +1,8 @@
 // Modules
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { CurrentUserContext } from 'Contexts';
+import { useContext } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 // Material UI
 import Menu from '@mui/material/Menu';
@@ -14,6 +16,12 @@ loginCallback = handleOpen
 */
 
 const UserMenu = ({ anchorEl, onClose, settings, handleLoginButton }) => {
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+  };
+
   return (
     <Menu
       id='menu-user'
@@ -31,16 +39,29 @@ const UserMenu = ({ anchorEl, onClose, settings, handleLoginButton }) => {
       onClose={onClose}
       sx={{ mt: '45px' }}
     >
-      <MenuItem onClick={handleLoginButton}>
-        <Typography variant='button' color={(theme) => theme.palette.primary.main}>Login</Typography>
-      </MenuItem>
-      {settings.map((setting, idx) => (
-        <MenuItem key={idx} onClick={onClose}>
-          <Typography textAlign='center'>
-            <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/${setting.routeName}`}>{setting.name}</Link>
-          </Typography>
-        </MenuItem>
-      ))}
+      {
+        currentUser
+          ? (
+            <MenuItem onClick={handleLogout}>
+              <Typography variant='button' color={(theme) => theme.palette.primary.main}>Sign Out</Typography>
+            </MenuItem>
+            )
+
+          : (
+            <MenuItem onClick={handleLoginButton}>
+              <Typography variant='button' color={(theme) => theme.palette.primary.main}>Sign In</Typography>
+            </MenuItem>
+            )
+      }
+      {
+        currentUser && settings.map((setting, idx) => (
+          <MenuItem sx={{ textDecoration: 'none', color: 'inherit' }} key={idx} component={RouterLink} to={`/${setting.routeName}`} onClick={onClose}>
+            <Typography>
+              {setting.name}
+            </Typography>
+          </MenuItem>
+        ))
+      }
     </Menu>
   );
 };

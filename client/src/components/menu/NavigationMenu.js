@@ -1,6 +1,6 @@
 // Modules
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 // Material UI
 import Menu from '@mui/material/Menu';
@@ -28,9 +28,9 @@ const NavigationMenu = ({ anchorEl, onClose, pages }) => {
       }}
     >
       {pages.map((page, idx) => (
-        <MenuItem key={idx} onClick={onClose}>
-          <Typography textAlign='center'>
-            <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/${page.routeName}`}>{page.name}</Link>
+        <MenuItem sx={{ textDecoration: 'none', color: 'inherit' }} key={idx} component={RouterLink} to={`/${page.routeName}`} onClick={onClose}>
+          <Typography>
+            {page.name}
           </Typography>
         </MenuItem>
       ))}
