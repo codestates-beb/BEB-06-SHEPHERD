@@ -22,6 +22,8 @@ const sendZ = async (req, res, next) => {
       orderAmount,
       0x00).encodeABI(); // Create the data for token transaction.
 
+    console.log(transactionDataSU);
+
     const rawTransactionSU = {
       to: contractHx,
       gas: 100000,
@@ -78,9 +80,12 @@ const sendZ = async (req, res, next) => {
 
       res.status(200).json({ message: 'success' });
     } else {
-      const error = new HttpError('올바른 접근이 아닙니다', 403);
+      const error = new HttpError('올바른 접근이 아닙니다.', 403);
       return next(error);
     }
+  } else {
+    const error = new HttpError('주소가 일치하지 않습니다.', 403);
+    return next(error);
   }
 };
 
