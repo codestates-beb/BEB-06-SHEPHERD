@@ -181,7 +181,7 @@ const addAccount = async (req, res, next) => {
       { $push: { sendOrder, takeOrder } }
     );
   } catch (err) {
-    const error = new HttpError("존재하지 않는 회원입니다");
+    const error = new HttpError("다시 시도해주세요", 500);
     return next(error);
   }
   res.status(200).json(getUser);
