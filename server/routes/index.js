@@ -1,3 +1,5 @@
+"use strict";
+
 const user = require("./user.route");
 const main = require("./main.route");
 const map = require("./map.route");
