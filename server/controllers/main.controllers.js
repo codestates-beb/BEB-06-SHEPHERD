@@ -43,10 +43,11 @@ const faucet = async (req, res, next) => {
         gas_amount: Number(faucetBalance_gas).toFixed(4),
       }
     );
-    res.status(200).json({ message: "success" });
+    res.status(200).json({ message: "지급완료" });
+  } else {
+    const error = new HttpError("올바른 접근이 아닙니다", 403);
+    return next(error);
   }
-  const error = new HttpError("올바른 접근이 아닙니다", 403);
-  return next(error);
 };
 
 module.exports = { main, faucet };

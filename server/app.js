@@ -21,7 +21,7 @@ mongoose
   .connect(process.env.DB_HOST)
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`[server🚀️]...http://localhost${PORT}`);
+      console.log(`[server🚀️]...http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
