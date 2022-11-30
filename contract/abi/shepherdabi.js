@@ -404,4 +404,4 @@ const shepherdAbi = [
     }
   ];
 
-export default shepherdAbi;
+module.exports = shepherdAbi;
