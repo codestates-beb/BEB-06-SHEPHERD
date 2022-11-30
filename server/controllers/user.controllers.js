@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 
+const CheckAuth = require("../middleware/check-auth");
 const HttpError = require("../models/http-error");
 const User = require("../models/user.models");
 
@@ -71,8 +72,8 @@ const join = async (req, res, next) => {
     account: "",
     gas_amount: "0",
     address,
-    sendOrder,
-    takeOrder,
+    sendOrder, // 주문을 할 수 있는 계정 (상위 계정)
+    takeOrder, // 물건을 보낼 수 있는 계정 (하위 계정)
   };
 
   const new_account = await web3.eth.accounts.create();
@@ -107,7 +108,6 @@ const join = async (req, res, next) => {
     }
   }
   userData["privateKey"] = privateKey;
-  console.log(userData);
 
   res.status(201).json({
     name: newUser.name,
@@ -172,8 +172,24 @@ const login = async (req, res, next) => {
   });
 };
 
+const addAccount = async (req, res, next) => {
+  const { sendOrder, takeOrder } = req.body;
+  let getUser;
+  try {
+    getUser = await User.updateOne(
+      { _id: req.params.uid },
+      { $push: { sendOrder, takeOrder } }
+    );
+  } catch (err) {
+    const error = new HttpError("다시 시도해주세요", 500);
+    return next(error);
+  }
+  res.status(200).json(getUser);
+};
+
 module.exports = {
   userInfo,
   join,
   login,
+  addAccount,
 };
