@@ -12,7 +12,6 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import Container from '@mui/material/Container';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
@@ -21,7 +20,7 @@ import Typography from '@mui/material/Typography';
 // Custom Modules
 import * as schema from 'features/schema';
 
-const Login = ({ handleClose }) => {
+const Login = ({ handleClose, sx }) => {
   // App.js에 CurrentUserContext Provider가 있음
   const { setCurrentUser } = useContext(CurrentUserContext);
   const navigate = useNavigate();
@@ -79,67 +78,66 @@ const Login = ({ handleClose }) => {
   };
 
   return (
-    <Container maxWidth='xs'>
-      <Box
+    <Box
+      sx={sx || {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '100%',
+        justifyContent: 'center'
+      }}
+    >
+      <Stack
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          height: '100%',
-          justifyContent: 'center'
+          p: 4,
+          alignItems: 'center'
         }}
       >
-        <Stack
-          sx={{
-            p: 4,
-            alignItems: 'center'
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LocalShippingIcon />
-          </Avatar>
-          <Typography component='h1' variant='h5'>
-            Sign in
-          </Typography>
-        </Stack>
+        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+          <LocalShippingIcon />
+        </Avatar>
+        <Typography component='h1' variant='h5'>
+          Sign in
+        </Typography>
+      </Stack>
 
-        <Stack
+      <Stack
+        sx={{
+          p: 2,
+          alignItems: 'center'
+        }}
+        spacing={1}
+      >
+        <TextField
+          size='small' label='Email' name='email' autoFocus autoComplete='id'
+          error={!!error}
+          value={email}
+          onChange={handleChange(setEmail)}
+        />
+        <TextField
+          size='small' label='Password' type='password' name='passoword' autoComplete='current-password'
+          error={!!error}
+          value={password}
+          helperText={error || ''} // 모든 로그인 오류는 비밀번호 쪽 헬퍼 텍스트로 보여준다.
+          onChange={handleChange(setPassword)}
+        />
+        <FormControlLabel
+          control={<Checkbox value='remember' color='primary' />}
+          label='Remember me'
           sx={{
-            p: 2,
-            alignItems: 'center'
+            pr: 1.4
           }}
-          spacing={1}
+        />
+        <Button
+          type='submit'
+          onClick={onSubmit}
         >
-          <TextField
-            size='small' label='Email' name='email' autoFocus autoComplete='id'
-            error={!!error}
-            value={email}
-            onChange={handleChange(setEmail)}
-          />
-          <TextField
-            size='small' label='Password' type='password' name='passoword' autoComplete='current-password'
-            error={!!error}
-            value={password}
-            helperText={error || ''} // 모든 로그인 오류는 비밀번호 쪽 헬퍼 텍스트로 보여준다.
-            onChange={handleChange(setPassword)}
-          />
-          <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
-            label='Remember me'
-            sx={{
-              pr: 1.4
-            }}
-          />
-          <Button
-            type='submit'
-            onClick={onSubmit}
-          >
-            Sign in
-          </Button>
-        </Stack>
+          Sign in
+        </Button>
+      </Stack>
 
-        {/* 잠시 보류합니다 */}
-        {/* <Stack
+      {/* 잠시 보류합니다 */}
+      {/* <Stack
           sx={{
             p: 1,
             alignItems: 'center'
@@ -149,8 +147,7 @@ const Login = ({ handleClose }) => {
           <Button>Forgot Password?</Button>
           <Button>Get MemberShip</Button>
         </Stack> */}
-      </Box>
-    </Container>
+    </Box>
   );
 };
 

@@ -24,16 +24,18 @@ import {
 import Dashboard from 'pages/Dashboard';
 import Error from 'pages/Error';
 import Main from 'pages/Main';
-import App from 'App';
+import Login from 'pages/Login';
 
-// components
-import Login from 'components/Login';
+import App from 'App';
 
 // Router 라우터
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />} errorElement={<Error />}>
-      <Route path='dashboard/' element={<Dashboard />} />
+      <Route
+        path='dashboard/'
+        element={<Dashboard />}
+      />
       <Route path='/' element={<Main />} />
       <Route path='login/' element={<Login />} />
     </Route>

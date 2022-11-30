@@ -1,7 +1,7 @@
 // Modules
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 // Material UI
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -20,7 +20,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
 // Components
-import Login from 'components/Login';
+import LoginForm from 'components/LoginForm';
 import Logo from 'components/Logo';
 import UserMenu from 'components/menu/UserMenu';
 import NavigationMenu from 'components/menu/NavigationMenu';
@@ -38,7 +38,7 @@ const style = {
 };
 
 const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
-const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
+const settings = [{ name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
 
 function Header (props) {
   const [loginModal, setLoginModal] = useState(false);
@@ -47,11 +47,6 @@ function Header (props) {
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-
-  useEffect(() => {
-    handleNavMenu.close();
-    handleUserMenu.close();
-  }, [loginModal]);
 
   const createMenuHandlers = (setAnchorEl) => {
     const handleOpen = (event) => setAnchorEl(event.currentTarget);
@@ -65,6 +60,11 @@ function Header (props) {
 
   const handleNavMenu = createMenuHandlers(setAnchorElNav);
   const handleUserMenu = createMenuHandlers(setAnchorElUser);
+
+  useEffect(() => {
+    handleNavMenu.close();
+    handleUserMenu.close();
+  }, [loginModal]);
 
   return (
     <AppBar position='relative' component='header' sx={props.sx}>
@@ -111,9 +111,13 @@ function Header (props) {
               <Button
                 key={idx}
                 onClick={handleNavMenu.close}
-                sx={{ color: 'white' }}
+                sx={{ textDecoration: 'none', color: 'white' }}
+                component={RouterLink}
+                to={`/${page.routeName}`}
               >
-                <Link style={{ textDecoration: 'none', color: 'white' }} to={`/${page.routeName}`}>{page.name}</Link>
+                <Typography variant='button'>
+                  {page.name}
+                </Typography>
               </Button>
             ))}
           </Box>
@@ -144,7 +148,7 @@ function Header (props) {
           aria-describedby='modal-modal-description'
         >
           <Box sx={style}>
-            <Login handleClose={closeLoginModal} />
+            <LoginForm handleClose={closeLoginModal} />
           </Box>
         </Modal>
       </Container>
