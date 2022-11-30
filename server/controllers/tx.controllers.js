@@ -44,12 +44,11 @@ const sendZ = async (req, res, next) => {
 
     const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
     console.log(`Z coin sent from server: ${serverAddr} to user: ${userAccount}, amount: ${zBalanceSU}`)
-  
+    
     // 요청한 코인 수량 만큼 서버에서 사용자 sendOrder 로 Z토큰 전송
     // DB query sendOrderAddress
     const sendOrderAddress = await User.findOne({sendOrder:sendSupplier, account:userAccount })
-
-    if (sendSupplier === sendOrderAddress.sendOrder) {
+    if (sendSupplier == sendOrderAddress.sendOrder) {
     // 발주 넣을 수량 Z 코인으로 전송
     //DB query 
     const transactionDataUS = contract.methods.safeTransferFrom(
@@ -81,10 +80,10 @@ const sendZ = async (req, res, next) => {
     console.log(`user balance: ${zBalanceU}, supplier balance: ${zBalanceS}`)
 
     res.status(200).json({ message: "success" });
-    }
-  } else {
-  const error = new HttpError("올바른 접근이 아닙니다", 403);
-  return next(error);
+    } else {
+      const error = new HttpError("올바른 접근이 아닙니다", 403);
+      return next(error);
+  } 
 }
 };
 
@@ -93,9 +92,8 @@ const sendX = async (req, res, next) => {
   const { takeAmount, userAccount, takeDistributor } = req.body;
 
   const takeDistributorAddress = await User.findOne({takeOrder:takeDistributor, account:userAccount })
-  console.log(req.userData.userAccount);
-  if (req.body.userAccount === req.userData.userAccount && takeDistributor ===   takeDistributorAddress.takeOrder) {
 
+  if (userAccount === req.userData.userAccount && takeDistributor == takeDistributorAddress.takeOrder) {
     const transactionDataUD = contract.methods.safeTransferFrom(
       userAccount, 
       takeDistributor, 
@@ -121,9 +119,10 @@ const sendX = async (req, res, next) => {
       console.log(`user balance: ${xBalance}, distributor balance: ${xBalanceD}`)
       
       res.status(200).json({ message: "success" });
-    }
+    } else {
     const error = new HttpError("올바른 접근이 아닙니다", 403);
     return next(error);
+    }
 };
 
 module.exports = {
