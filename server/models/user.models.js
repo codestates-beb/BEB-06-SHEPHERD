@@ -10,8 +10,8 @@ const userSchema = new Schema({
   account: { type: String, required: true },
   gas_amount: { type: String, required: true },
   address: { type: String, required: true },
-  sendOrder: { type: String, required: true },
-  takeOrder: { type: String, required: true },
+  sendOrder: [{ type: String, required: true }], // 값을 배열 형식으로 저장
+  takeOrder: [{ type: String, required: true }],
 });
 
 // 중복 유효성 검사
