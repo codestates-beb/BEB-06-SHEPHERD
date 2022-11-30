@@ -1,6 +1,6 @@
 // Modules
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // Material UI
@@ -14,8 +14,6 @@ import Button from '@mui/material/Button';
 import { grey } from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Modal from '@mui/material/Modal';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
@@ -24,6 +22,8 @@ import Typography from '@mui/material/Typography';
 // Components
 import Login from 'components/Login';
 import Logo from 'components/Logo';
+import UserMenu from 'components/menu/UserMenu';
+import NavigationMenu from 'components/menu/NavigationMenu';
 
 const style = {
   position: 'absolute',
@@ -41,32 +41,37 @@ const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
 const settings = [{ name: ['Dashboard'], routeName: ['Dashboard'] }, { name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
 
 function Header (props) {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [loginModal, setLoginModal] = useState(false);
+  const openLoginModal = () => setLoginModal(true);
+  const closeLoginModal = () => setLoginModal(false);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+  useEffect(() => {
+    handleNavMenu.close();
+    handleUserMenu.close();
+  }, [loginModal]);
+
+  const createMenuHandlers = (setAnchorEl) => {
+    const handleOpen = (event) => setAnchorEl(event.currentTarget);
+    const handleClose = () => setAnchorEl(null);
+
+    return {
+      open: handleOpen,
+      close: handleClose
+    };
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const handleNavMenu = createMenuHandlers(setAnchorElNav);
+  const handleUserMenu = createMenuHandlers(setAnchorElUser);
 
   return (
     <AppBar position='relative' component='header' sx={props.sx}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
+
+          {/* Logo */}
           <Logo to='/'>
             <LocalShippingIcon sx={{ mr: 2 }} />
             <Typography
@@ -80,102 +85,66 @@ function Header (props) {
               Shepherd
             </Typography>
           </Logo>
+
+          {/* Navigation Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
+              aria-label='navigation menu'
+              aria-controls='menu-nav'
               aria-haspopup='true'
-              onClick={handleOpenNavMenu}
+              onClick={handleNavMenu.open}
               color='inherit'
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id='menu-appbar'
+            <NavigationMenu
               anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left'
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' }
-              }}
-            >
-              {pages.map((page, idx) => (
-                <MenuItem key={idx} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>
-                    <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/${page.routeName}`}>{page.name}</Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+              onClose={handleNavMenu.close}
+              pages={pages}
+            />
           </Box>
+
+          {/* Navigation List */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, idx) => (
               <Button
                 key={idx}
-                onClick={handleCloseNavMenu}
+                onClick={handleNavMenu.close}
                 sx={{ color: 'white' }}
               >
                 <Link style={{ textDecoration: 'none', color: 'white' }} to={`/${page.routeName}`}>{page.name}</Link>
               </Button>
             ))}
           </Box>
+
+          {/* User Menu */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open Menu'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleUserMenu.open} sx={{ p: 0 }}>
                 <Avatar sx={{ bgcolor: grey[50] }}>
                   <AccountCircleIcon fontSize='large' />
                 </Avatar>
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
+            <UserMenu
               anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem onClick={handleOpen}>
-                <Typography variant='button' color={(theme) => theme.palette.primary.main}>Login</Typography>
-              </MenuItem>
-              {settings.map((setting, idx) => (
-                <MenuItem key={idx} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>
-                    <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/${setting.routeName}`}>{setting.name}</Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+              onClose={handleUserMenu.close}
+              settings={settings}
+              handleLoginButton={openLoginModal}
+            />
           </Box>
         </Toolbar>
         {/* 모달을 메뉴 안에 넣으면, 특정 키를 눌렀을 때 lose focuse하는 문제가 발생함 */}
         {/* 그래서 메뉴 밖으로 꺼내옴 */}
         <Modal
-          open={open}
-          onClose={handleClose}
+          open={loginModal}
+          onClose={closeLoginModal}
           aria-labelledby='modal-modal-title'
           aria-describedby='modal-modal-description'
         >
           <Box sx={style}>
-            <Login />
+            <Login handleClose={closeLoginModal} />
           </Box>
         </Modal>
       </Container>
