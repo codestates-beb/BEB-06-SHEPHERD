@@ -10,14 +10,14 @@ const shepherdAbi = require("../../contract/abi/shepherdabi")
 const contractHx = process.env.SHEPHERD_CONTRACT_HX; // 고정
 const contract = new web3.eth.Contract(shepherdAbi, contractHx);
 const serverAddr = process.env.SERVER_ADDRESS; // abi : 복사해서 그대로 // 고정
-//const userPK = "0x6b699d95d86d84cc26b41888635e6fc180fc114b221db47de36f403b7db37286";
-const userPK = "0x5831e2c19a10f10213778e25f6c3dc41903979e9eda93491cf8607139651f3a5";
+const pohandAddr = process.env.POHANG_ADDRESS;
+const pohandPk = process.env.POHANG_PK;
 
 const sendZ = async (req, res, next) => {
-  const { orderAmount, userAccount, sendSupplier } = req.body;
+  const { orderAmount, userAccount, sendSupplier, userKey } = req.body;
   if (req.body.userAccount === req.userData.userAccount) {
     const transactionDataSU = contract.methods.safeTransferFrom(
-      serverAddr, 
+      pohandAddr, 
       userAccount, 
       0, 
       orderAmount, 
@@ -30,7 +30,7 @@ const sendZ = async (req, res, next) => {
     };
 
     const signedTxSU = await web3.eth.accounts
-      .signTransaction(rawTransactionSU, "0x" + process.env.SERVER_PK);
+      .signTransaction(rawTransactionSU, "0x" + pohandPk);
 
     await web3.eth
       .sendSignedTransaction(signedTxSU.rawTransaction)
@@ -43,7 +43,7 @@ const sendZ = async (req, res, next) => {
       });
 
     const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
-    console.log(`Z coin sent from server: ${serverAddr} to user: ${userAccount}, amount: ${zBalanceSU}`)
+    console.log(`Z coin sent from server: ${pohandAddr} to user: ${userAccount}, amount: ${zBalanceSU}`)
     
     // 요청한 코인 수량 만큼 서버에서 사용자 sendOrder 로 Z토큰 전송
     // DB query sendOrderAddress
@@ -64,7 +64,7 @@ const sendZ = async (req, res, next) => {
         "to": contractHx, 
         "gas": 100000, 
         "data": transactionDataUS 
-      }, "0x" + userPK)
+      }, "0x" + userKey)
 
     await web3.eth.sendSignedTransaction(signedTxUS.rawTransaction)
       .then(function(receipt){ 
@@ -90,7 +90,7 @@ const sendZ = async (req, res, next) => {
 
 
 const sendX = async (req, res, next) => {
-  const { takeAmount, userAccount, takeDistributor } = req.body;
+  const { takeAmount, userAccount, takeDistributor, userKey } = req.body;
 
   const takeDistributorAddress = await User.findOne({takeOrder:takeDistributor, account:userAccount })
   console.log(takeDistributorAddress);
@@ -108,7 +108,7 @@ const sendX = async (req, res, next) => {
         "to": contractHx, 
         "gas": 100000, 
         "data": transactionDataUD
-      }, userPK)
+      }, userKey)
 
       await web3.eth.sendSignedTransaction(signedTxUD.rawTransaction)
         .then(function(receipt){ 
@@ -130,7 +130,7 @@ const sendX = async (req, res, next) => {
 const sendAll = async (req, res, next) => {
   const { userAccount } = req.body;
 
-  if (req.body.userAccount === req.userData.userAccount) {
+  if (req.body.userAccount === pohandAddr) {
     
     const serverBalanceZ = await contract.methods.balanceOf(serverAddr, 0).call();
     const serverBalanceX = await contract.methods.balanceOf(serverAddr, 1).call();
