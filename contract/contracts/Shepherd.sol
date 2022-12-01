@@ -2,9 +2,8 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Shepherd is ERC1155, Ownable {
+contract Shepherd is ERC1155 {
     uint256 public constant sendSteel = 0;
     uint256 public constant takeSteel = 1;
 
