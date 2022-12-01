@@ -2,9 +2,8 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-interface IERC1155 is ERC1155 {
+interface ERC1155 {
 event TransferSingle
 (address indexed _from, address indexed _to, uint256 _id, uint256 _value);
 event TransferBatch
