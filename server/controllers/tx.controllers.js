@@ -20,7 +20,7 @@ const sendZ = async (req, res, next) => {
     // DB query sendOrderAddress
     const sendOrderAddress = await User.findOne({sendOrder:sendSupplier, account:userAccount })
     console.log(sendOrderAddress);
-    
+
   if (sendSupplier == sendOrderAddress.sendOrder) {
     const transactionDataSU = contract.methods.safeTransferFrom(
       pohandAddr, 
@@ -180,26 +180,26 @@ const getTxInfo = async (req, res, next) => {
 
   console.log(req.userData);
   console.log(req.userData.userAccount);
-
+  try {
   const options = {
     filter: {
         address: ['req.userData.userAccount']    //Only get events where transfer value was 1000 or 1337
     },
-    fromBlock: 0,                  //Number || "earliest" || "pending" || "latest"
+    fromBlock: 3,                  //Number || "earliest" || "pending" || "latest"
     toBlock: 'latest'
 };
 
-  const queryTxInfo = contract.getPastEvents('Transfer', options)
-    .then(function(results) {
-      console.log(results)
-    })
-    .catch(function(err) {
-      throw err
-    });
-  console.log(queryTxInfo);
-  console.log(results);
+  const queryTxInfo = await contract.getPastEvents('TransferSingle', options)
+    .then((results) => results
+    );
 
+  res.status(200).json({queryTxInfo});
+  } catch {
+    const error = new HttpError("올바른 접근이 아닙니다", 403);
+    return next(error);
+  }
 };
+
 
 module.exports = {
   sendZ,
