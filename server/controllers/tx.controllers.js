@@ -10,8 +10,8 @@ const shepherdAbi = require("../../contract/abi/shepherdabi")
 const contractHx = process.env.SHEPHERD_CONTRACT_HX; // 고정
 const contract = new web3.eth.Contract(shepherdAbi, contractHx);
 const serverAddr = process.env.SERVER_ADDRESS; // abi : 복사해서 그대로 // 고정
-const pohandAddr = process.env.POHANG_ADDRESS;
-const pohandPk = process.env.POHANG_PK;
+const pohangAddr = process.env.POHANG_ADDRESS;
+const pohangPk = process.env.POHANG_PK;
 
 const sendZ = async (req, res, next) => {
   const { orderAmount, sendSupplier, userKey } = req.body;
@@ -23,7 +23,7 @@ const sendZ = async (req, res, next) => {
 
   if (sendSupplier == sendOrderAddress.sendOrder) {
     const transactionDataSU = contract.methods.safeTransferFrom(
-      pohandAddr, 
+      pohangAddr, 
       userAccount, 
       0, 
       orderAmount, 
@@ -36,7 +36,7 @@ const sendZ = async (req, res, next) => {
     };
 
     const signedTxSU = await web3.eth.accounts
-      .signTransaction(rawTransactionSU, "0x" + pohandPk);
+      .signTransaction(rawTransactionSU, "0x" + pohangPk);
 
     await web3.eth
       .sendSignedTransaction(signedTxSU.rawTransaction)
@@ -49,7 +49,7 @@ const sendZ = async (req, res, next) => {
       });
 
     const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
-    console.log(`Z coin sent from server: ${pohandAddr} to user: ${userAccount}, amount: ${zBalanceSU}`)
+    console.log(`Z coin sent from: ${pohangAddr} to: ${userAccount}, amount: ${zBalanceSU}`)
     
     // 발주 넣을 수량 Z 코인으로 전송
     //DB query 
@@ -79,7 +79,7 @@ const sendZ = async (req, res, next) => {
     const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
     const zBalanceS = await contract.methods.balanceOf(sendSupplier, 0).call();
     console.log(`Z coin sent from user: ${userAccount} to supplier: ${sendSupplier}`)
-    console.log(`user balance: ${zBalanceU}, supplier balance: ${zBalanceS}`)
+    console.log(`sender balance: ${zBalanceU}, supplier balance: ${zBalanceS}`)
 
     res.status(200).json({ message: "success" });
 
@@ -119,7 +119,7 @@ const sendX = async (req, res, next) => {
       const xBalance = await contract.methods.balanceOf(userAccount, 1).call();
       const xBalanceD = await contract.methods.balanceOf(takeDistributor, 1).call();
       console.log(`X coin sent from user:${userAccount} to distributor:${takeDistributor}`);
-      console.log(`user balance: ${xBalance}, distributor balance: ${xBalanceD}`)
+      console.log(`sender balance: ${xBalance}, distributor balance: ${xBalanceD}`)
       
       res.status(200).json({ message: "success" });
     } else {
@@ -177,9 +177,6 @@ const sendAll = async (req, res, next) => {
 }
 
 const getTxInfo = async (req, res, next) => {
-
-  console.log(req.userData);
-  console.log(req.userData.userAccount);
   try {
   const options = {
     filter: {

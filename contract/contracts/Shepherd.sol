@@ -2,8 +2,9 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC165.sol"
 
-interface ERC1155 {
+
 event TransferSingle
 (address indexed _from, address indexed _to, uint256 _id, uint256 _value);
 event TransferBatch
@@ -12,7 +13,6 @@ event TransferBatch
 function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data) external;
 function safeBatchTransferFrom(address _from, address _to, uint256[] calldata _ids, uint256[] calldata _values, bytes calldata _data) external;
 function balanceOf(address _owner, uint256 _id) external view returns (uint256);
-}
 
 
 contract Shepherd is ERC1155 {
