@@ -13,8 +13,14 @@ const pohandAddr = process.env.POHANG_ADDRESS;
 const pohandPk = process.env.POHANG_PK;
 
 const sendZ = async (req, res, next) => {
-  const { orderAmount, userAccount, sendSupplier, userKey } = req.body;
-  if (req.body.userAccount === req.userData.userAccount) {
+  const { orderAmount, sendSupplier, userKey } = req.body;
+  const userAccount = req.userData.userAccount;
+  // 요청한 코인 수량 만큼 서버에서 사용자 sendOrder 로 Z토큰 전송
+  // DB query sendOrderAddress
+  const sendOrderAddress = await User.findOne({ sendOrder: sendSupplier, account: userAccount });
+  console.log(sendOrderAddress);
+
+  if (sendSupplier === sendOrderAddress.sendOrder) {
     const transactionDataSU = contract.methods.safeTransferFrom(
       pohandAddr,
       userAccount,
@@ -43,42 +49,36 @@ const sendZ = async (req, res, next) => {
     const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
     console.log(`Z coin sent from server: ${pohandAddr} to user: ${userAccount}, amount: ${zBalanceSU}`);
 
-    // 요청한 코인 수량 만큼 서버에서 사용자 sendOrder 로 Z토큰 전송
-    // DB query sendOrderAddress
-    const sendOrderAddress = await User.findOne({ sendOrder: sendSupplier, account: userAccount });
-    console.log(sendOrderAddress);
-    if (sendSupplier == sendOrderAddress.sendOrder) {
     // 발주 넣을 수량 Z 코인으로 전송
     // DB query
-      const transactionDataUS = contract.methods.safeTransferFrom(
-        userAccount,
-        sendSupplier,
-        0,
-        orderAmount,
-        0x00).encodeABI(); // Create the data for token transaction.
+    const transactionDataUS = contract.methods.safeTransferFrom(
+      userAccount,
+      sendSupplier,
+      0,
+      orderAmount,
+      0x00).encodeABI(); // Create the data for token transaction.
 
-      const signedTxUS = await web3.eth.accounts
-        .signTransaction({
-          to: contractHx,
-          gas: 100000,
-          data: transactionDataUS
-        }, '0x' + userKey);
+    const signedTxUS = await web3.eth.accounts
+      .signTransaction({
+        to: contractHx,
+        gas: 100000,
+        data: transactionDataUS
+      }, '0x' + userKey);
 
-      await web3.eth.sendSignedTransaction(signedTxUS.rawTransaction)
-        .then(function (receipt) {
-          console.log('Transaction receipt: ', receipt);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    await web3.eth.sendSignedTransaction(signedTxUS.rawTransaction)
+      .then(function (receipt) {
+        console.log('Transaction receipt: ', receipt);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-      const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
-      const zBalanceS = await contract.methods.balanceOf(sendSupplier, 0).call();
-      console.log(`Z coin sent from user: ${userAccount} to supplier: ${sendSupplier}`);
-      console.log(`user balance: ${zBalanceU}, supplier balance: ${zBalanceS}`);
+    const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
+    const zBalanceS = await contract.methods.balanceOf(sendSupplier, 0).call();
+    console.log(`Z coin sent from user: ${userAccount} to supplier: ${sendSupplier}`);
+    console.log(`user balance: ${zBalanceU}, supplier balance: ${zBalanceS}`);
 
-      res.status(200).json({ message: 'success' });
-    }
+    res.status(200).json({ message: 'success' });
   } else {
     const error = new HttpError('올바른 접근이 아닙니다', 403);
     return next(error);
@@ -86,12 +86,13 @@ const sendZ = async (req, res, next) => {
 };
 
 const sendX = async (req, res, next) => {
-  const { takeAmount, userAccount, takeDistributor, userKey } = req.body;
+  const { takeAmount, takeDistributor, userKey } = req.body;
+  const userAccount = req.userData.userAccount;
 
   const takeDistributorAddress = await User.findOne({ takeOrder: takeDistributor, account: userAccount });
   console.log(takeDistributorAddress);
 
-  if (userAccount === req.userData.userAccount && takeDistributor === takeDistributorAddress.takeOrder) {
+  if (takeDistributor === takeDistributorAddress.takeOrder) {
     const transactionDataUD = contract.methods.safeTransferFrom(
       userAccount,
       takeDistributor,
@@ -168,8 +169,31 @@ const sendAll = async (req, res, next) => {
   }
 };
 
+const getTxInfo = async (req, res, next) => {
+  console.log(req.userData);
+  console.log(req.userData.userAccount);
+
+  const options = {
+    filter: {
+      address: ['req.userData.userAccount'] // Only get events where transfer value was 1000 or 1337
+    },
+    fromBlock: 0, // Number || "earliest" || "pending" || "latest"
+    toBlock: 'latest'
+  };
+
+  const queryTxInfo = contract.getPastEvents('Transfer', options)
+    .then(function (results) {
+      console.log(results);
+    })
+    .catch(function (err) {
+      throw err;
+    });
+  console.log(queryTxInfo);
+};
+
 module.exports = {
   sendZ,
   sendX,
-  sendAll
+  sendAll,
+  getTxInfo
 };
