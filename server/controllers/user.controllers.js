@@ -191,7 +191,7 @@ const login = async (req, res, next) => {
     // 몽구스를 통해 사용자 정보를 반환하되, email과 name, account, uid, sendOrder, takeOrder만 보이게 합니다.
     user = await User.findOne(
       { email },
-      'email name account uid sendOrder takeOrder'
+      'email name account uid address sendOrder takeOrder'
     );
   } catch (err) {
     const error = new HttpError('접근에 실패했습니다', 500);
