@@ -49,7 +49,7 @@ const sendZ = async (req, res, next) => {
       });
 
     const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
-    console.log(`Z coin sent from server: ${pohandAddr} to user: ${userAccount}, amount: ${zBalanceSU}`)
+    console.log(`Z coin sent from: ${pohandAddr} to: ${userAccount}, amount: ${zBalanceSU}`)
     
     // 발주 넣을 수량 Z 코인으로 전송
     //DB query 
@@ -79,7 +79,7 @@ const sendZ = async (req, res, next) => {
     const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
     const zBalanceS = await contract.methods.balanceOf(sendSupplier, 0).call();
     console.log(`Z coin sent from user: ${userAccount} to supplier: ${sendSupplier}`)
-    console.log(`user balance: ${zBalanceU}, supplier balance: ${zBalanceS}`)
+    console.log(`sender balance: ${zBalanceU}, supplier balance: ${zBalanceS}`)
 
     res.status(200).json({ message: "success" });
 
@@ -119,7 +119,7 @@ const sendX = async (req, res, next) => {
       const xBalance = await contract.methods.balanceOf(userAccount, 1).call();
       const xBalanceD = await contract.methods.balanceOf(takeDistributor, 1).call();
       console.log(`X coin sent from user:${userAccount} to distributor:${takeDistributor}`);
-      console.log(`user balance: ${xBalance}, distributor balance: ${xBalanceD}`)
+      console.log(`sender balance: ${xBalance}, distributor balance: ${xBalanceD}`)
       
       res.status(200).json({ message: "success" });
     } else {
@@ -177,9 +177,6 @@ const sendAll = async (req, res, next) => {
 }
 
 const getTxInfo = async (req, res, next) => {
-
-  console.log(req.userData);
-  console.log(req.userData.userAccount);
   try {
   const options = {
     filter: {
