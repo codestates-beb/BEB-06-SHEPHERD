@@ -9,20 +9,18 @@ const shepherdAbi = require('../../contract/abi/shepherdabi');
 const contractHx = process.env.SHEPHERD_CONTRACT_HX; // 고정
 const contract = new web3.eth.Contract(shepherdAbi, contractHx);
 const serverAddr = process.env.SERVER_ADDRESS; // abi : 복사해서 그대로 // 고정
-// const userPK = "0x6b699d95d86d84cc26b41888635e6fc180fc114b221db47de36f403b7db37286";
-const userPK = 'abb8d7468eefa707bcf1f3e1d6783c1b51e26a44f61590c28e0dbfcd7ee020cb';
+const pohandAddr = process.env.POHANG_ADDRESS;
+const pohandPk = process.env.POHANG_PK;
 
 const sendZ = async (req, res, next) => {
-  const { orderAmount, userAccount, sendSupplier } = req.body;
+  const { orderAmount, userAccount, sendSupplier, userKey } = req.body;
   if (req.body.userAccount === req.userData.userAccount) {
     const transactionDataSU = contract.methods.safeTransferFrom(
-      serverAddr,
+      pohandAddr,
       userAccount,
       0,
       orderAmount,
       0x00).encodeABI(); // Create the data for token transaction.
-
-    console.log(transactionDataSU);
 
     const rawTransactionSU = {
       to: contractHx,
@@ -31,7 +29,7 @@ const sendZ = async (req, res, next) => {
     };
 
     const signedTxSU = await web3.eth.accounts
-      .signTransaction(rawTransactionSU, '0x' + process.env.SERVER_PK);
+      .signTransaction(rawTransactionSU, '0x' + pohandPk);
 
     await web3.eth
       .sendSignedTransaction(signedTxSU.rawTransaction)
@@ -43,12 +41,13 @@ const sendZ = async (req, res, next) => {
       });
 
     const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
-    console.log(`Z coin sent from server: ${serverAddr} to user: ${userAccount}, amount: ${zBalanceSU}`);
+    console.log(`Z coin sent from server: ${pohandAddr} to user: ${userAccount}, amount: ${zBalanceSU}`);
 
     // 요청한 코인 수량 만큼 서버에서 사용자 sendOrder 로 Z토큰 전송
     // DB query sendOrderAddress
     const sendOrderAddress = await User.findOne({ sendOrder: sendSupplier, account: userAccount });
-    if (sendSupplier === sendOrderAddress.sendOrder) {
+    console.log(sendOrderAddress);
+    if (sendSupplier == sendOrderAddress.sendOrder) {
     // 발주 넣을 수량 Z 코인으로 전송
     // DB query
       const transactionDataUS = contract.methods.safeTransferFrom(
@@ -63,7 +62,7 @@ const sendZ = async (req, res, next) => {
           to: contractHx,
           gas: 100000,
           data: transactionDataUS
-        }, '0x' + userPK);
+        }, '0x' + userKey);
 
       await web3.eth.sendSignedTransaction(signedTxUS.rawTransaction)
         .then(function (receipt) {
@@ -79,20 +78,18 @@ const sendZ = async (req, res, next) => {
       console.log(`user balance: ${zBalanceU}, supplier balance: ${zBalanceS}`);
 
       res.status(200).json({ message: 'success' });
-    } else {
-      const error = new HttpError('올바른 접근이 아닙니다.', 403);
-      return next(error);
     }
   } else {
-    const error = new HttpError('주소가 일치하지 않습니다.', 403);
+    const error = new HttpError('올바른 접근이 아닙니다', 403);
     return next(error);
   }
 };
 
 const sendX = async (req, res, next) => {
-  const { takeAmount, userAccount, takeDistributor } = req.body;
+  const { takeAmount, userAccount, takeDistributor, userKey } = req.body;
 
   const takeDistributorAddress = await User.findOne({ takeOrder: takeDistributor, account: userAccount });
+  console.log(takeDistributorAddress);
 
   if (userAccount === req.userData.userAccount && takeDistributor === takeDistributorAddress.takeOrder) {
     const transactionDataUD = contract.methods.safeTransferFrom(
@@ -107,7 +104,7 @@ const sendX = async (req, res, next) => {
         to: contractHx,
         gas: 100000,
         data: transactionDataUD
-      }, userPK);
+      }, userKey);
 
     await web3.eth.sendSignedTransaction(signedTxUD.rawTransaction)
       .then(function (receipt) {
@@ -125,7 +122,54 @@ const sendX = async (req, res, next) => {
   }
 };
 
+const sendAll = async (req, res, next) => {
+  const { userAccount } = req.body;
+
+  if (req.body.userAccount === pohandAddr) {
+    const serverBalanceZ = await contract.methods.balanceOf(serverAddr, 0).call();
+    const serverBalanceX = await contract.methods.balanceOf(serverAddr, 1).call();
+    console.log(`Transfer Z token to Pohang :${serverAddr} amount: ${serverBalanceZ}`);
+    console.log(`Transfer X token to Pohang : ${serverAddr} amount: ${serverBalanceX}`);
+    if (serverBalanceX <= 0 || serverBalanceZ <= 0) {
+      console.log('Server has insufficient funds');
+    } else {
+      const transactionDataAll = contract.methods.safeBatchTransferFrom(
+        serverAddr,
+        userAccount,
+        [0, 1],
+        [1000000000000000, 1000000000000000],
+        0x00
+      ).encodeABI();
+
+      const signedTxAll = await web3.eth.accounts
+        .signTransaction({
+          to: contractHx,
+          gas: 100000,
+          data: transactionDataAll
+        }, '0x' + process.env.SERVER_PK);
+
+      await web3.eth.sendSignedTransaction(signedTxAll.rawTransaction)
+        .then(function (receipt) {
+          console.log('Transaction Receipt:', receipt);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      const pohangBalanceZ = await contract.methods.balanceOf(userAccount, 0).call();
+      const pohangBalanceX = await contract.methods.balanceOf(userAccount, 1).call();
+      console.log(`Transfer Z token to Pohang :${userAccount} amount: ${pohangBalanceZ}`);
+      console.log(`Transfer X token to Pohang : ${userAccount} amount: ${pohangBalanceX}`);
+    }
+    res.status(200).json({ message: 'success' });
+  } else {
+    const error = new HttpError('올바른 접근이 아닙니다', 403);
+    return next(error);
+  }
+};
+
 module.exports = {
   sendZ,
-  sendX
+  sendX,
+  sendAll
 };
