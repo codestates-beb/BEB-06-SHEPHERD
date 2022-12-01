@@ -34,35 +34,10 @@ const accountInfo = async (req, res, next) => {
     return next(error);
   }
 
-  let decodedOwner;
-  if (account) {
-    const accountOwner = account.name;
+  delete Object.entries(account)[2][1].password;
+  delete Object.entries(account)[2][1]._id;
 
-    // Promise.all : promise {<pending>} 값을 해결하기 위한 메서드 : 여러 프로미스의 결과를 모을 때 유용
-    const sendOrderOwner = await Promise.all(
-      account.sendOrder.map(
-        async (acc) =>
-          await User.findOne({ account: acc })
-            .then((sendOrder) => sendOrder.name)
-            .catch((err) => console.log(err)) // 해당 값이 없는 회원을 위한 error처리
-      )
-    );
-    const takeOrderOwner = await Promise.all(
-      account.takeOrder.map(
-        async (acc) =>
-          await User.findOne({ account: acc })
-            .then((takeOrder) => takeOrder.name)
-            .catch((err) => console.log(err))
-      )
-    );
-    decodedOwner = {
-      accountOwner: accountOwner,
-      sendOrderOwner: sendOrderOwner,
-      takeOrderOwner: takeOrderOwner,
-    };
-  }
-
-  res.status(200).json(decodedOwner);
+  res.status(200).json(account);
 };
 
 const join = async (req, res, next) => {
