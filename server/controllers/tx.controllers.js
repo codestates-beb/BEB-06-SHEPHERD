@@ -10,8 +10,8 @@ const shepherdAbi = require("../../contract/abi/shepherdabi")
 const contractHx = process.env.SHEPHERD_CONTRACT_HX; // 고정
 const contract = new web3.eth.Contract(shepherdAbi, contractHx);
 const serverAddr = process.env.SERVER_ADDRESS; // abi : 복사해서 그대로 // 고정
-const pohandAddr = process.env.POHANG_ADDRESS;
-const pohandPk = process.env.POHANG_PK;
+const pohangAddr = process.env.POHANG_ADDRESS;
+const pohangPk = process.env.POHANG_PK;
 
 const sendZ = async (req, res, next) => {
   const { orderAmount, sendSupplier, userKey } = req.body;
@@ -23,7 +23,7 @@ const sendZ = async (req, res, next) => {
 
   if (sendSupplier == sendOrderAddress.sendOrder) {
     const transactionDataSU = contract.methods.safeTransferFrom(
-      pohandAddr, 
+      pohangAddr, 
       userAccount, 
       0, 
       orderAmount, 
@@ -36,7 +36,7 @@ const sendZ = async (req, res, next) => {
     };
 
     const signedTxSU = await web3.eth.accounts
-      .signTransaction(rawTransactionSU, "0x" + pohandPk);
+      .signTransaction(rawTransactionSU, "0x" + pohangPk);
 
     await web3.eth
       .sendSignedTransaction(signedTxSU.rawTransaction)
@@ -49,7 +49,7 @@ const sendZ = async (req, res, next) => {
       });
 
     const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
-    console.log(`Z coin sent from: ${pohandAddr} to: ${userAccount}, amount: ${zBalanceSU}`)
+    console.log(`Z coin sent from: ${pohangAddr} to: ${userAccount}, amount: ${zBalanceSU}`)
     
     // 발주 넣을 수량 Z 코인으로 전송
     //DB query 
