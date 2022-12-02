@@ -123,7 +123,7 @@ function OrderList ({ user }) {
             <>
               <BaseStack>
                 <Typography variant='h5' sx={{ pb: 1, overflowWrap: 'anywhere' }}>
-                  OrderList
+                  Order List
                 </Typography>
                 <Typography variant='subtitle2' color={(theme) => theme.palette.text.secondary} sx={{ pb: 1, overflowWrap: 'anywhere' }}>
                   Orderer: {user.name}
