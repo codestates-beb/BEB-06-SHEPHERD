@@ -5,7 +5,6 @@ import { Link as RouterLink } from 'react-router-dom';
 
 // Material UI
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
@@ -24,6 +23,7 @@ import LoginForm from 'components/LoginForm';
 import Logo from 'components/Logo';
 import UserMenu from 'components/menu/UserMenu';
 import NavigationMenu from 'components/menu/NavigationMenu';
+import HomeIcon from 'components/HomeIcon';
 
 const style = {
   position: 'absolute',
@@ -73,7 +73,7 @@ function Header (props) {
 
           {/* Logo */}
           <Logo to='/'>
-            <LocalShippingIcon sx={{ mr: 2 }} />
+            <HomeIcon sx={{ mr: 2 }} />
             <Typography
               variant='h6'
               sx={{
