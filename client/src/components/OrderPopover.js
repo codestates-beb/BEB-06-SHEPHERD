@@ -55,7 +55,7 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type
         body = takeOrderBody;
       } else throw new Error('Wrong Type');
 
-      Axios.post(`${process.env.REACT_APP_API_URL}/tx/${urlSuffix}`, body)
+      Axios.post(`${process.env.REACT_APP_API_URL}/tx/${urlSuffix}`, body, { withCredentials: true })
         .then((response) => {
           setResult('Transaction Complete');
           setStepNum(2);

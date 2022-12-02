@@ -99,7 +99,7 @@ function TransactionList ({ user }) {
   const [transactions, setTransactions] = useState([]);
 
   const loadList = () => {
-    Axios.get(`${process.env.REACT_APP_API_URL}/tx/getTxInfo`)
+    Axios.get(`${process.env.REACT_APP_API_URL}/tx/getTxInfo`, { withCredentials: true })
       .then(response => {
         const { data } = response;
         const { queryTxInfo } = data;
