@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+
+const checkAuth = require('./middleware/check-auth');
 
 const routes = require('./routes');
 
@@ -14,6 +17,8 @@ const cors = require('cors');
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(checkAuth);
 
 app.use('/', routes);
 
