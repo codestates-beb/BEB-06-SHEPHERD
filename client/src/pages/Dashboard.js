@@ -22,21 +22,24 @@ function Dashboard () {
 
   return (
     <>
-      {!currentUser && (
-        <Navigate to='/login' replace />
-      )}
-      <Grid container spacing={2} p={2} sx={style}>
-        <Grid item xs={12} sm={6}>
-          <Paper elevation={5} sx={{ height: 1 }}>
-            <TransactionList />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper elevation={5} sx={{ height: 1 }}>
-            <MakeOrder />
-          </Paper>
-        </Grid>
-      </Grid>
+      {!currentUser
+        ? (
+          <Navigate to='/login' replace />
+          )
+        : (
+          <Grid container spacing={2} p={2} sx={style}>
+            <Grid item xs={12} sm={6}>
+              <Paper elevation={5} sx={{ height: 1 }}>
+                <TransactionList user={currentUser} />
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Paper elevation={5} sx={{ height: 1 }}>
+                <MakeOrder user={currentUser} />
+              </Paper>
+            </Grid>
+          </Grid>
+          )}
     </>
 
   );
