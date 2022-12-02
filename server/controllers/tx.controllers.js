@@ -1,6 +1,5 @@
 const HttpError = require('../models/http-error');
 const User = require('../models/user.models');
-const jwt = require('jsonwebtoken');
 // web3
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545')); // 가나슈와 연동(로컬)
@@ -15,13 +14,19 @@ const pohangPk = process.env.POHANG_PK;
 
 const sendZ = async (req, res, next) => {
   const { orderAmount, sendSupplier, userKey } = req.body;
+  if (!req.userData) {
+    const error = new HttpError('인증 정보가 없습니다', 403);
+    return next(error);
+  }
+
   const userAccount = req.userData.userAccount;
+
   // 요청한 코인 수량 만큼 서버에서 사용자 sendOrder 로 Z토큰 전송
   // DB query sendOrderAddress
   const sendOrderAddress = await User.findOne({ sendOrder: sendSupplier, account: userAccount });
   console.log(sendOrderAddress);
 
-  if (sendSupplier == sendOrderAddress.sendOrder) {
+  if (sendOrderAddress.sendOrder.find(element => element === sendSupplier)) {
     const transactionDataSU = contract.methods.safeTransferFrom(
       pohangAddr,
       userAccount,
@@ -88,12 +93,20 @@ const sendZ = async (req, res, next) => {
 
 const sendX = async (req, res, next) => {
   const { takeAmount, takeDistributor, userKey } = req.body;
+  if (!req.userData) {
+    const error = new HttpError('인증 정보가 없습니다', 403);
+    return next(error);
+  }
+
   const userAccount = req.userData.userAccount;
 
+  // findOne({ Array: String }) => 배열 안의 값을 따져서 가져온다
   const takeDistributorAddress = await User.findOne({ takeOrder: takeDistributor, account: userAccount });
   console.log(takeDistributorAddress);
 
-  if (takeDistributor == takeDistributorAddress.takeOrder) {
+  // takeOrder = Array
+  // takeDistributor = String
+  if (takeDistributorAddress.takeOrder.find(element => element === takeDistributor)) {
     const transactionDataUD = contract.methods.safeTransferFrom(
       userAccount,
       takeDistributor,
@@ -127,7 +140,7 @@ const sendX = async (req, res, next) => {
 const sendAll = async (req, res, next) => {
   const { userAccount } = req.body;
 
-  if (req.body.userAccount === pohandAddr) {
+  if (req.body.userAccount === pohangAddr) {
     const serverBalanceZ = await contract.methods.balanceOf(serverAddr, 0).call();
     const serverBalanceX = await contract.methods.balanceOf(serverAddr, 1).call();
     console.log(`Transfer Z token to Pohang :${serverAddr} amount: ${serverBalanceZ}`);

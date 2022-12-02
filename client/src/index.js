@@ -27,6 +27,7 @@ import Main from 'pages/Main';
 import Login from 'pages/Login';
 
 import App from 'App';
+import { CookiesProvider } from 'react-cookie';
 
 // Router 라우터
 const router = createBrowserRouter(
@@ -72,9 +73,11 @@ const theme = createTheme({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <CookiesProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline enableColorScheme />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </CookiesProvider>
   </React.StrictMode>
 );

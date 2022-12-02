@@ -44,7 +44,7 @@ function OrderList ({ user }) {
       const sendOrderPromises = user.sendOrder
         .filter(account => account !== '0x00')
         .map(async (account, idx) => {
-          const response = await Axios.get(`${process.env.REACT_APP_API_URL}/user`, { params: { a: account } });
+          const response = await Axios.get(`${process.env.REACT_APP_API_URL}/user`, { params: { a: account }, withCredentials: true });
           const { data: receiver } = response;
 
           return {
@@ -123,7 +123,7 @@ function OrderList ({ user }) {
             <>
               <BaseStack>
                 <Typography variant='h5' sx={{ pb: 1, overflowWrap: 'anywhere' }}>
-                  OrderList
+                  Order List
                 </Typography>
                 <Typography variant='subtitle2' color={(theme) => theme.palette.text.secondary} sx={{ pb: 1, overflowWrap: 'anywhere' }}>
                   Orderer: {user.name}

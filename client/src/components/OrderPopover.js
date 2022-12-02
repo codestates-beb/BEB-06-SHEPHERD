@@ -34,18 +34,28 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type
     try {
       setStepNum(1);
 
-      const body = {
+      const sendOrderBody = {
         orderAmount: tokenAmmount,
         sendSupplier: receiver.accountAddress,
         userKey: privateKey
       };
 
-      let urlSuffix;
-      if (type === 'Z') urlSuffix = 'sendZ';
-      else if (type === 'X') urlSuffix = 'sendX';
-      else throw new Error('Wrong Type');
+      const takeOrderBody = {
+        takeAmount: tokenAmmount,
+        takeDistributor: receiver.accountAddress,
+        userKey: privateKey
+      };
 
-      Axios.post(`${process.env.REACT_APP_API_URL}/tx/${urlSuffix}`, body)
+      let urlSuffix, body;
+      if (type === 'Z') {
+        urlSuffix = 'sendZ';
+        body = sendOrderBody;
+      } else if (type === 'X') {
+        urlSuffix = 'sendX';
+        body = takeOrderBody;
+      } else throw new Error('Wrong Type');
+
+      Axios.post(`${process.env.REACT_APP_API_URL}/tx/${urlSuffix}`, body, { withCredentials: true })
         .then((response) => {
           setResult('Transaction Complete');
           setStepNum(2);

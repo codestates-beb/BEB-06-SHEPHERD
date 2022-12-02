@@ -62,9 +62,11 @@ function Header (props) {
   const handleUserMenu = createMenuHandlers(setAnchorElUser);
 
   useEffect(() => {
-    handleNavMenu.close();
-    handleUserMenu.close();
-  }, [loginModal]);
+    if (loginModal) {
+      handleNavMenu.close();
+      handleUserMenu.close();
+    }
+  });
 
   return (
     <AppBar position='relative' component='header' sx={props.sx}>

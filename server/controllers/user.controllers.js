@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const Web3 = require('web3');
-const { use } = require('../routes/user.route');
 const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
 
 const userInfo = async (req, res, next) => {
@@ -117,7 +116,15 @@ const join = async (req, res, next) => {
       refreshToken = jwt.sign(userData, process.env.REFRESH_SECRET, {
         expiresIn: '1h'
       });
-      res.cookie('refreshToken', refreshToken);
+
+      if (req.cookies) {
+        const token = req.cookies.token;
+        if (!token) {
+          res.cookie('token', accessToken);
+        } else {
+          res.cookie('token', refreshToken);
+        }
+      }
     } catch (err) {
       const error = new HttpError('다시 시도해주세요', 500);
       return next(error);
@@ -140,7 +147,6 @@ const login = async (req, res, next) => {
   let existingUser;
   try {
     existingUser = await User.findOne({ email });
-    console.log(existingUser);
   } catch (err) {
     const error = new HttpError('다시 시도해주세요', 500);
     return next(error);
@@ -176,8 +182,14 @@ const login = async (req, res, next) => {
       refreshToken = jwt.sign({ existingUser }, process.env.REFRESH_SECRET, {
         expiresIn: '1h'
       });
-      console.log(refreshToken);
-      res.cookie('refreshToken', refreshToken);
+      if (req.cookies) {
+        const token = req.cookies.token;
+        if (!token) {
+          res.cookie('token', accessToken);
+        } else {
+          res.cookie('token', refreshToken);
+        }
+      }
     } catch (err) {
       console.log(err);
       const error = new HttpError('접근에 실패했습니다', 500);
@@ -198,7 +210,7 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({
+  res.status(200).json({
     message: '환영합니다',
     user
   });
