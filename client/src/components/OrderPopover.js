@@ -14,9 +14,9 @@ import Typography from '@mui/material/Typography';
 import Axios from 'axios';
 import { useState } from 'react';
 
-function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver }) {
+function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type }) {
   const [stepNum, setStepNum] = useState(0);
-  const [load, setLoad] = useState(false);
+  const [result, setResult] = useState('');
 
   const steps = [
     'Insert your private key',
@@ -31,23 +31,33 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver }) {
   };
 
   const handleSubmit = () => {
-    setStepNum(1);
+    try {
+      setStepNum(1);
 
-    const body = {
-      orderAmount: tokenAmmount,
-      sendSupplier: receiver.accountAddress,
-      userKey: privateKey
-    };
+      const body = {
+        orderAmount: tokenAmmount,
+        sendSupplier: receiver.accountAddress,
+        userKey: privateKey
+      };
 
-    console.log(body);
+      let urlSuffix;
+      if (type === 'Z') urlSuffix = 'sendZ';
+      else if (type === 'X') urlSuffix = 'sendX';
+      else throw new Error('Wrong Type');
 
-    Axios.post(`${process.env.REACT_APP_API_URL}/tx/sendZ`, body)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      Axios.post(`${process.env.REACT_APP_API_URL}/tx/${urlSuffix}`, body)
+        .then((response) => {
+          setResult('Transaction Complete');
+          setStepNum(2);
+        })
+        .catch((error) => {
+          setResult(error.message);
+          setStepNum(2);
+        });
+    } catch (error) {
+      setResult(error.message);
+      setStepNum(2);
+    }
   };
 
   const ContentByStep = () => {
@@ -104,6 +114,19 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver }) {
       case 2 :
         return (
           <>
+            <Typography variant='h5' mb={3}>{steps[2]}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center'
+              }}
+              pt={2}
+              pb={2}
+            >
+              <Typography variant='h6'>
+                {result}
+              </Typography>
+            </Box>
           </>
         );
       default :
