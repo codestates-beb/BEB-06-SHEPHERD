@@ -9,7 +9,6 @@ module.exports = (req, res, next) => {
   }
   try {
     // cookie가 있는지 확인해서 없으면 패스
-
     if (req.cookies) {
       const cookies = req.cookies;
       const token = cookies.token;
@@ -24,8 +23,15 @@ module.exports = (req, res, next) => {
     }
     next();
   } catch (err) {
-    console.error(err);
-    const error = new HttpError('인증에 실패했습니다', 403);
-    return next(error);
+    let error;
+    // Token Expired Error에 한해서 다음으로 그냥 넘어갑니다.
+    switch (err.name) {
+      case 'TokenExpiredError' :
+        next();
+        break;
+      default:
+        error = new HttpError('인증에 실패했습니다', 403);
+        return next(error);
+    }
   }
 };
