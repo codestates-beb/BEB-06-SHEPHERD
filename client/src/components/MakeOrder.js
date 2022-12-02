@@ -1,4 +1,5 @@
 // Modules
+import Axios from 'axios';
 import * as schema from 'features/schema';
 import { useEffect, useState } from 'react';
 
@@ -11,6 +12,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import Modal from '@mui/material/Modal';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -20,6 +22,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 // Custom Components
 import BaseStack from 'components/base/BaseStack';
+import OrderPopover from 'components/OrderPopover';
 
 const AccordionSummary = styled((props) => (
   <MuiAccordionSummary
@@ -34,13 +37,33 @@ const AccordionSummary = styled((props) => (
   }
 }));
 
-function OrderOption ({ data, expanded, onChange }) {
+function OrderOption ({ data, expanded, onChange, onClick, tokenAmmount, setTokenAmmount }) {
   const {
-    id,
     title,
     from,
     to
   } = data;
+
+  const setTokenAmmountOnlyNumber = (value) => {
+    const wordOnly = /[^\d]+/g;
+    const filtered = value.replaceAll(wordOnly, '');
+
+    let number;
+    if (filtered.length > 0)number = parseInt(filtered);
+    else number = 0;
+
+    setTokenAmmount(number);
+  };
+
+  const handleChange = (callback) => {
+    return (event) => {
+      callback(event.target.value);
+    };
+  };
+
+  const resetTokenAmount = () => {
+    setTokenAmmount(0);
+  };
 
   return (
     <Accordion
@@ -70,8 +93,8 @@ function OrderOption ({ data, expanded, onChange }) {
           }
         })}
       >
-        <Typography variant='subheader1' sx={{ pb: 1 }}>
-          {`${title} #${id}`}
+        <Typography variant='subheader1' sx={{ pb: 1, overflowWrap: 'anywhere' }}>
+          {`${title}`}
         </Typography>
         <Box sx={{
           display: 'flex',
@@ -79,10 +102,10 @@ function OrderOption ({ data, expanded, onChange }) {
         }}
         >
           <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-            From {`${from}`}
+            From {`${from.locationAddress}`}
           </Typography>
           <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-            To {`${to}`}
+            To {`${to.locationAddress}`}
           </Typography>
         </Box>
       </AccordionSummary>
@@ -105,12 +128,16 @@ function OrderOption ({ data, expanded, onChange }) {
           InputLabelProps={{
             shrink: true
           }}
+          value={tokenAmmount}
+          onChange={handleChange(setTokenAmmountOnlyNumber)}
           InputProps={{
-            startAdornment: <InputAdornment position='start'>kg</InputAdornment>,
+            startAdornment: <InputAdornment position='start'>z token</InputAdornment>,
             endAdornment: (
               <InputAdornment position='end'>
-                <IconButton size='small'>
-                  <ClearIcon fontSize='small' />
+                <IconButton size='small' onClick={resetTokenAmount}>
+                  <ClearIcon
+                    fontSize='small'
+                  />
                 </IconButton>
               </InputAdornment>
             ),
@@ -130,6 +157,7 @@ function OrderOption ({ data, expanded, onChange }) {
       >
         <Button
           variant='text'
+          onClick={onClick}
         >Offer
         </Button>
       </AccordionActions>
@@ -137,60 +165,99 @@ function OrderOption ({ data, expanded, onChange }) {
   );
 }
 
-function MakeOrder () {
+function MakeOrder ({ user }) {
   const [availableOrders, setOrders] = useState([]);
+  const [isValid, setValidation] = useState(false);
   const [expanded, setExpanded] = useState(false);
+
+  const [orderModal, setOrderModal] = useState(false);
+  const openOrderModal = () => setOrderModal(true);
+  const closeOrderModal = () => setOrderModal(false);
+
+  const [tokenAmmount, setTokenAmmount] = useState(0);
+  const [privateKey, setPrivateKey] = useState(0);
+  const [receiver, setReceiver] = useState('');
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
   const loadList = () => {
-    setOrders([
-      {
-        id: 1,
-        title: '포스코에서 철강 발주',
-        from: '포항',
-        to: '대구',
-        orderer: '건양엔지니어링'
-      },
-      {
-        id: 2,
-        title: '포스코에서 철강 발주',
-        from: '포항',
-        to: '대구',
-        orderer: '건양엔지니어링'
-      }
-    ]);
+    try {
+      const orderPromises = user.sendOrder.map(async (account, idx) => {
+        const response = await Axios.get(`${process.env.REACT_APP_API_URL}/user`, { params: { a: account } });
+        const { data: receiver } = response;
+
+        return {
+          id: idx,
+          title: account,
+          from: {
+            locationAddress: user.address,
+            accountAddress: user.account
+          },
+          to: {
+            locationAddress: receiver.address,
+            accountAddress: receiver.account
+          },
+          orderer: user.name
+        };
+      });
+
+      Promise.all(orderPromises).then((orders) => {
+        setOrders(orders);
+      });
+    } catch (e) {
+      console.error(e);
+      setOrders([]);
+    }
   };
 
   // Transaction 목록을 불러올 때마다 적용함
-  useEffect(loadList, []);
+  useEffect(loadList, [user]);
 
-  const validationTest = (
-    Array.isArray(availableOrders) &&
-    availableOrders.length > 0 &&
-    availableOrders.every((item) => {
-      const errors = schema.order.validate(item);
-      if (errors.length > 0) {
-        errors.forEach(error => console.error(error));
-      }
-      return errors.length < 1;
-    })
-  );
+  useEffect(() => {
+    const validationTest = (
+      Array.isArray(availableOrders) &&
+      availableOrders.length > 0 &&
+      availableOrders.every((item) => {
+        const errors = schema.order.validate(item);
+        if (errors.length > 0) {
+          errors.forEach(error => console.error(error));
+        }
+        return errors.length < 1;
+      })
+    );
+
+    setValidation(validationTest);
+  }, [availableOrders]);
 
   return (
-    <BaseStack>
-      <Typography variant='h5' sx={{ pb: 1 }}>
-        Make an Order
-      </Typography>
-      <Typography variant='h6' color={(theme) => theme.palette.text.secondary} sx={{ pb: 2, fontWeight: 'normal', fontSize: '1.2rem' }}>
-        Orderer:
-      </Typography>
-      {
-        validationTest
+    <>
+      <BaseStack>
+        <Typography variant='h5' sx={{ pb: 1 }}>
+          Make an Order
+        </Typography>
+        <Typography variant='h6' color={(theme) => theme.palette.text.secondary} sx={{ pb: 2, fontWeight: 'normal', fontSize: '1.2rem' }}>
+          Orderer:
+        </Typography>
+        {
+        isValid
           ? availableOrders.map((item, i) => {
-            return <OrderOption key={i + 1} data={item} expanded={expanded === i + 1} onChange={handleChange(i + 1)} />;
+            return (
+              <OrderOption
+                key={i + 1}
+                data={item}
+                expanded={expanded === i + 1}
+                onChange={handleChange(i + 1)}
+                tokenAmmount={tokenAmmount}
+                setTokenAmmount={setTokenAmmount}
+                onClick={() => {
+                  openOrderModal();
+                  console.log(item);
+                  setReceiver(item.to);
+                }}
+              />
+            );
           })
           : (
             <Typography>
@@ -198,7 +265,21 @@ function MakeOrder () {
             </Typography>
             )
       }
-    </BaseStack>
+      </BaseStack>
+      <Modal
+        open={orderModal}
+        onClose={closeOrderModal}
+        aria-labelledby='order-modal'
+      >
+        <OrderPopover
+          privateKey={privateKey}
+          setPrivateKey={setPrivateKey}
+          tokenAmmount={tokenAmmount}
+          receiver={receiver}
+        />
+      </Modal>
+    </>
+
   );
 }
 

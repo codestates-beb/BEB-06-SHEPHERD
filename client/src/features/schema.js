@@ -61,12 +61,24 @@ export const order = new Schema(
       required: true
     },
     from: {
-      type: String,
-      required: true
+      locationAddress: {
+        type: String,
+        required: true
+      },
+      accountAddress: {
+        type: String,
+        required: true
+      }
     },
     to: {
-      type: String,
-      required: true
+      locationAddress: {
+        type: String,
+        required: true
+      },
+      accountAddress: {
+        type: String,
+        required: true
+      }
     },
     orderer: {
       type: String,
