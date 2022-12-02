@@ -57,8 +57,11 @@ export const order = new Schema(
       required: true
     },
     title: {
+      type: String
+    },
+    type: {
       type: String,
-      required: true
+      enum: ['Z', 'X']
     },
     from: {
       locationAddress: {
