@@ -125,12 +125,6 @@ function OrderList ({ user }) {
                 <Typography variant='h5' sx={{ pb: 1, overflowWrap: 'anywhere' }}>
                   Order List
                 </Typography>
-                <Typography variant='subtitle2' color={(theme) => theme.palette.text.secondary} sx={{ pb: 1, overflowWrap: 'anywhere' }}>
-                  Orderer: {user.name}
-                </Typography>
-                <Typography variant='subtitle2' color={(theme) => theme.palette.text.secondary} sx={{ pb: 1, overflowWrap: 'anywhere' }}>
-                  {user.account}
-                </Typography>
                 {
           isValid
             ? availableOrders.map((item, i) => {
