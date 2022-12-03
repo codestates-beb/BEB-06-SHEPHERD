@@ -204,9 +204,29 @@ const getTxInfo = async (req, res, next) => {
   }
 };
 
+const getTokenBalance = async (req, res, next) => {
+  if (!req.userData) {
+    const error = new HttpError('인증 정보가 없습니다', 403);
+    return next(error);
+  }
+
+  const userAccount = req.userData.userAccount;
+  try {
+    const findBalanceZ = await contract.methods.balanceOf(userAccount, 0).call();
+    const findBalanceX = await contract.methods.balanceOf(userAccount, 1).call();
+    console.log(`total Z token: ${findBalanceZ}`);
+    console.log(`total Z token: ${findBalanceX}`);
+    res.status(200).json({findBalanceZ, findBalanceX});
+  } catch {
+    const error = new HttpError('올바른 접근이 아닙니다', 403);
+    return next(error);
+  };
+};
+
 module.exports = {
   sendZ,
   sendX,
   sendAll,
-  getTxInfo
+  getTxInfo,
+  getTokenBalance,
 };
