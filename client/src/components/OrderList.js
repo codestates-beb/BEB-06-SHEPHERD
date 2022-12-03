@@ -126,31 +126,31 @@ function OrderList ({ user }) {
                   Order List
                 </Typography>
                 {
-          isValid
-            ? availableOrders.map((item, i) => {
-              return (
-                <OrderOption
-                  key={i + 1}
-                  data={item}
-                  expanded={expanded === i + 1}
-                  onChange={changePanel(i + 1)}
-                  tokenAmmount={tokenAmmount}
-                  setTokenAmmount={setTokenAmmount}
-                  onClick={() => {
-                    openOrderModal();
-                    console.log(item);
-                    setReceiver(item.to);
-                    setType(item.type);
-                  }}
-                />
-              );
-            })
-            : (
-              <Typography>
-                You don't have any available order yet.
-              </Typography>
-              )
-        }
+                  isValid
+                    ? availableOrders.map((item, i) => {
+                      return (
+                        <OrderOption
+                          key={i + 1}
+                          data={item}
+                          expanded={expanded === i + 1}
+                          onChange={changePanel(i + 1)}
+                          tokenAmmount={tokenAmmount}
+                          setTokenAmmount={setTokenAmmount}
+                          onClick={() => {
+                            openOrderModal();
+                            console.log(item);
+                            setReceiver(item.to);
+                            setType(item.type);
+                          }}
+                        />
+                      );
+                    })
+                    : (
+                      <Typography>
+                        You don't have any available order yet.
+                      </Typography>
+                      )
+                }
               </BaseStack>
               <Modal
                 open={orderModal}

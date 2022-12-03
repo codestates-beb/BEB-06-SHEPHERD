@@ -17,7 +17,7 @@ function Dashboard () {
 
   const style = {
     justifyContent: 'center',
-    alignContent: 'stretch',
+    alignContent: 'flex-start',
     alignItems: 'stretch'
   };
 
