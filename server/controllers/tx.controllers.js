@@ -302,7 +302,7 @@ const getTokenBalance = async (req, res, next) => {
       .balanceOf(userAccount, 1)
       .call();
     console.log(`total Z token: ${findBalanceZ}`);
-    console.log(`total Z token: ${findBalanceX}`);
+    console.log(`total X token: ${findBalanceX}`);
     res.status(200).json({ findBalanceZ, findBalanceX });
   } catch {
     const error = new HttpError("올바른 접근이 아닙니다", 403);
