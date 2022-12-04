@@ -8,18 +8,30 @@ module.exports = (req, res, next) => {
     return next();
   }
   try {
-    const token = req.headers.cookie.split('=')[1];
-    if (!token) {
-      throw new Error('인증에 실패했습니다');
+    // cookie가 있는지 확인해서 없으면 패스
+    if (req.cookies) {
+      const cookies = req.cookies;
+      const token = cookies.token;
+
+      if (token) {
+        const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET);
+        req.userData = {
+          userId: decodedToken.existingUser._id,
+          userAccount: decodedToken.existingUser.account
+        };
+      }
     }
-    const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET);
-    req.userData = {
-      userId: decodedToken.existingUser._id,
-      userAccount: decodedToken.existingUser.account
-    };
     next();
   } catch (err) {
-    const error = new HttpError('인증에 실패했습니다', 403);
-    return next(error);
+    let error;
+    // Token Expired Error에 한해서 다음으로 그냥 넘어갑니다.
+    switch (err.name) {
+      case 'TokenExpiredError' :
+        next();
+        break;
+      default:
+        error = new HttpError('인증에 실패했습니다', 403);
+        return next(error);
+    }
   }
 };

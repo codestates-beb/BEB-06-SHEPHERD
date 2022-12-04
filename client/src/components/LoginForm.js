@@ -47,7 +47,8 @@ const Login = ({ handleClose, sx }) => {
         const primaryError = errors[0];
         throw (primaryError);
       } else {
-        const response = await Axios.post(`${process.env.REACT_APP_API_URL}/user/login`, body);
+        const response = await Axios.post(`${process.env.REACT_APP_API_URL}/user/login`, body, { withCredentials: true });
+        console.log(response);
         setError(false);
 
         const userInfo = response.data.user;

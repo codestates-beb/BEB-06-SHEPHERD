@@ -1,6 +1,6 @@
 // Modules
 import * as React from 'react';
-import { CurrentUserContext } from 'Contexts';
+import { CurrentUserContext, TokenContext } from 'Contexts';
 import { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -17,9 +17,11 @@ loginCallback = handleOpen
 
 const UserMenu = ({ anchorEl, onClose, settings, handleLoginButton }) => {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const { removeCookie } = useContext(TokenContext);
 
   const handleLogout = () => {
     setCurrentUser(null);
+    removeCookie('token');
   };
 
   return (

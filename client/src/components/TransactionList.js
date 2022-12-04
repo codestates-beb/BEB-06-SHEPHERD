@@ -24,7 +24,7 @@ import BaseStack from 'components/base/BaseStack';
 // 내부의 open state를 제외하고는 props에서 데이터를 받아 채운다.
 function TransactionItem ({ data }) {
   const [open, setOpen] = useState(false);
-  const { id, arrival, currentLocation } = data;
+  const { blockNumber, transactionHash } = data;
 
   const handleClick = () => {
     setOpen(!open);
@@ -41,15 +41,16 @@ function TransactionItem ({ data }) {
       }}
     >
       <CardHeader
-        title={<Typography variant='body1' sx={{ fontWeight: 500 }}>{`Transaction Number #${id}`}</Typography>}
+        title={<Typography variant='body1' sx={{ fontWeight: 500 }}>{`Block Number #${blockNumber}`}</Typography>}
         subheader={
           <>
-            <Typography variant='subtitle2'>Current Location : {currentLocation}</Typography>
-            <Typography variant='subtitle2'>Estimated Arrival Date : {arrival.date.toDateString()}</Typography>
+            <Typography variant='subtitle2'>Transaction Hash</Typography>
+            <Typography variant='body2'>{transactionHash}</Typography>
           </>
         }
         sx={{
-          flexGrow: 1
+          flexGrow: 1,
+          overflowWrap: 'anywhere'
         }}
       />
       <CardActions sx={{ p: 1 }}>
@@ -57,7 +58,7 @@ function TransactionItem ({ data }) {
           <Typography variant='body1'>Show Details</Typography>
         </Button>
       </CardActions>
-      <Collapse in={open} sx={{ flexBasis: '100%' }}>
+      <Collapse in={open} sx={{ flexBasis: '100%', overflowWrap: 'anywhere' }}>
         <CardContent sx={{
           p: 2,
           pt: 0
@@ -73,13 +74,14 @@ function TransactionItem ({ data }) {
               <Box
                 sx={{
                   display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between'
+                  flexWrap: 'wrap',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start'
                 }}
                 pb={1}
                 key={key}
               >
-                <Typography variant='subtitle2'>
+                <Typography variant='subtitle2' sx={{ mr: 1 }}>
                   {key}
                 </Typography>
                 <Typography variant='body2'>
@@ -98,32 +100,55 @@ function TransactionItem ({ data }) {
 function TransactionList ({ user }) {
   const [transactions, setTransactions] = useState([]);
 
+  const getAsyncUserInfo = async (Promise) => {
+    const response = await Promise;
+    if (response.data) {
+      const { data } = response;
+      return data;
+    }
+  };
+
   const loadList = () => {
-    Axios.get(`${process.env.REACT_APP_API_URL}/tx/getTxInfo`)
-      .then(response => {
+    Axios.get(`${process.env.REACT_APP_API_URL}/tx/getTxInfo`, { withCredentials: true })
+      .then((response) => {
         const { data } = response;
         const { queryTxInfo } = data;
 
-        const transactions = queryTxInfo.map(() => {
+        const transactions = queryTxInfo.map(async (tx) => {
+          const arrival = await getAsyncUserInfo(
+            Axios.get(`${process.env.REACT_APP_API_URL}/user`, { params: { a: tx.returnValues.to }, withCredentials: true })
+          );
+          const departure = await getAsyncUserInfo(
+            Axios.get(`${process.env.REACT_APP_API_URL}/user`, { params: { a: tx.returnValues.from }, withCredentials: true })
+          );
+
           return {
-            id: 1,
+            blockNumber: tx.blockNumber,
+            blockHash: tx.blockHash,
+            transactionHash: tx.transactionHash,
+            value: parseInt(tx.returnValues.value),
             arrival: {
-              date: new Date(2022, 11, 22),
-              location: '대구'
+              name: arrival.name,
+              location: arrival.address,
+              accountAddress: arrival.account
             },
-            currentLocation: '포항',
             departure: {
-              date: new Date(2022, 11, 21),
-              location: '포항'
+              name: departure.name,
+              location: departure.address,
+              accountAddress: departure.account
             },
-            orderDate: new Date(2022, 11, 18),
-            orderer: '건양엔지니어링',
-            status: 'Ongoing',
-            amount: 100
+            orderer: tx.returnValues.operator
           };
         });
-        setTransactions(transactions);
-      }).catch(error => {
+
+        console.log(transactions);
+        return Promise.all(transactions);
+      })
+      .then((transactionPromises) => {
+        console.log(transactionPromises);
+        setTransactions(transactionPromises);
+      })
+      .catch(error => {
         console.error(error);
         setTransactions([]);
       });

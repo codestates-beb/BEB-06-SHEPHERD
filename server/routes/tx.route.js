@@ -8,5 +8,6 @@ router.post('/sendZ', orderController.sendZ);
 router.post('/sendX', orderController.sendX);
 router.post('/sendAll', orderController.sendAll);
 router.get('/getTxInfo', orderController.getTxInfo);
+router.get('/getTokenBalance', orderController.getTokenBalance);
 
 module.exports = router;
