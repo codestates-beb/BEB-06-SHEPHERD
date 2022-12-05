@@ -16,6 +16,9 @@ const app = express();
 // 외부 API를 사용하기 위한 CORS 추가
 const cors = require('cors');
 
+const corsArray = process.env.CORS.split(',');
+console.log(corsArray);
+
 app.use(cors({ origin: process.env.CORS, credentials: true }));
 
 app.use(bodyParser.json());
