@@ -33,7 +33,6 @@ const Login = ({ handleClose, sx }) => {
     // 이후 axios가 추가되어 먼저 서버로부터의 인증을 거친 뒤
     // 사용자를 지정하는 것으로 수정함
     // 이때 currentUser에 password를 넘기지 않습니다
-
     try {
       const body = {
         email: email,
@@ -42,13 +41,10 @@ const Login = ({ handleClose, sx }) => {
 
       const errors = schema.loginForm.validate(body);
       if (errors.length > 0) {
-        errors.forEach(error => console.error(error));
-
         const primaryError = errors[0];
         throw (primaryError);
       } else {
         const response = await Axios.post(`${process.env.REACT_APP_API_URL}/user/login`, body, { withCredentials: true });
-        console.log(response);
         setError(false);
 
         const userInfo = response.data.user;
@@ -136,18 +132,6 @@ const Login = ({ handleClose, sx }) => {
           Sign in
         </Button>
       </Stack>
-
-      {/* 잠시 보류합니다 */}
-      {/* <Stack
-          sx={{
-            p: 1,
-            alignItems: 'center'
-          }}
-          spacing={0.2}
-        >
-          <Button>Forgot Password?</Button>
-          <Button>Get MemberShip</Button>
-        </Stack> */}
     </Box>
   );
 };
