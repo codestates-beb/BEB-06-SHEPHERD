@@ -1,10 +1,9 @@
-'use strict';
+"use strict";
 
-const mainControllers = require('../controllers/main.controllers');
+const mainControllers = require("../controllers/main.controllers");
 
-const router = require('express').Router();
+const router = require("express").Router();
 
-router.get('/', mainControllers.main);
-router.get('/faucet/:account', mainControllers.faucet);
+router.get("/faucet/:account", mainControllers.faucet);
 
 module.exports = router;

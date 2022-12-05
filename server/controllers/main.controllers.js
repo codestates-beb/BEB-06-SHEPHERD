@@ -7,8 +7,6 @@ require("dotenv").config();
 const Web3 = require("web3");
 const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
-const main = async (req, res) => {};
-
 const faucet = async (req, res, next) => {
   if (req.params.account === req.userData.userAccount) {
     const signedTx = await web3.eth.accounts.signTransaction(
@@ -49,4 +47,4 @@ const faucet = async (req, res, next) => {
   }
 };
 
-module.exports = { main, faucet };
+module.exports = { faucet };
