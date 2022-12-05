@@ -91,7 +91,6 @@ function OrderList ({ user }) {
         setOrders(orders);
       });
     } catch (e) {
-      console.error(e);
       setOrders([]);
     }
   };
@@ -105,9 +104,6 @@ function OrderList ({ user }) {
       availableOrders.length > 0 &&
       availableOrders.every((item) => {
         const errors = schema.order.validate(item);
-        if (errors.length > 0) {
-          errors.forEach(error => console.error(error));
-        }
         return errors.length < 1;
       })
     );
@@ -138,7 +134,6 @@ function OrderList ({ user }) {
                           setTokenAmmount={setTokenAmmount}
                           onClick={() => {
                             openOrderModal();
-                            console.log(item);
                             setReceiver(item.to);
                             setType(item.type);
                           }}

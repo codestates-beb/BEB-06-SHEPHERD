@@ -141,11 +141,9 @@ function TransactionList ({ user }) {
           };
         });
 
-        console.log(transactions);
         return Promise.all(transactions);
       })
       .then((transactionPromises) => {
-        console.log(transactionPromises);
         setTransactions(transactionPromises);
       })
       .catch(error => {

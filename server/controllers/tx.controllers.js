@@ -27,7 +27,6 @@ const sendZ = async (req, res, next) => {
     sendOrder: sendSupplier,
     account: userAccount,
   });
-  console.log(sendOrderAddress);
 
   if (sendOrderAddress.sendOrder.find((element) => element === sendSupplier)) {
     if (sendOrderAddress.takeOrder[0] === "0x00") {
@@ -52,7 +51,7 @@ const sendZ = async (req, res, next) => {
           console.log("Transaction receipt: ", receipt);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
 
       const zBalanceSU = await contract.methods
@@ -83,7 +82,7 @@ const sendZ = async (req, res, next) => {
           console.log("Transaction receipt: ", receipt);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
 
       const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
@@ -118,7 +117,7 @@ const sendZ = async (req, res, next) => {
           console.log("Transaction receipt: ", receipt);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
 
       const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
@@ -243,7 +242,7 @@ const sendAll = async (req, res, next) => {
           console.log("Transaction Receipt:", receipt);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
 
       const pohangBalanceZ = await contract.methods
