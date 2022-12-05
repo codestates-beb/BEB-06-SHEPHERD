@@ -10,7 +10,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 const main = async (req, res) => {};
 
 const faucet = async (req, res, next) => {
-  console.log(req.userData);
   if (req.params.account === req.userData.userAccount) {
     const signedTx = await web3.eth.accounts.signTransaction(
       {
@@ -28,7 +27,7 @@ const faucet = async (req, res, next) => {
         console.log(receipt);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
     // 잔액 확인
     const faucetBalance = await web3.eth.getBalance(req.userData.userAccount);

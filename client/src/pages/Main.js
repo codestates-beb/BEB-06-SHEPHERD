@@ -46,7 +46,7 @@ function Main () {
         effect='solid'
         type='warning'/>
         <MainFeaturedPost post={mainFeaturedPost} />
-        <Grid Container spacing={4}>
+        <Grid container spacing={4}>
           {featuredPosts.map((post) => (
             <FeaturedPost key={post.title} post={post} />
           ))}
