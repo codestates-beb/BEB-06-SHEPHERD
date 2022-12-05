@@ -176,6 +176,7 @@ function OrderList ({ user, shouldReload }) {
                 }}
                 >
                   <OrderPopover
+                    closeOrderModal={closeOrderModal}
                     privateKey={privateKey}
                     setPrivateKey={setPrivateKey}
                     tokenAmmount={tokenAmmount}

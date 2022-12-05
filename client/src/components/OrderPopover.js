@@ -12,20 +12,32 @@ import Typography from '@mui/material/Typography';
 
 // Modules
 import Axios from 'axios';
-import { useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { CurrentUserContext } from 'Contexts';
 
-function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type }) {
+function OrderPopover ({ closeOrderModal, privateKey, setPrivateKey, tokenAmmount, receiver, type }) {
   const { setReload } = useContext(CurrentUserContext);
 
   const [stepNum, setStepNum] = useState(0);
   const [result, setResult] = useState('');
+
+  const completeMsg = 'Transaction Complete';
 
   const steps = [
     'Insert your private key',
     'Waiting for transaction',
     'Complete'
   ];
+
+  useEffect(() => {
+    // 3번째 단계까지 확인하고 난 뒤 (즉 UI가 보여지고 난 뒤)
+    // 컴포넌트의 데이터를 다시 불러온다.
+    // 이때 꼭 트랜젝션이 올바르게 되었는지 확인한다.
+    if (stepNum === 2 && result === completeMsg) {
+      setReload(true);
+      closeOrderModal();
+    }
+  }, [stepNum]);
 
   const handleChange = (callback) => {
     return (event) => {
@@ -60,9 +72,8 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type
 
       Axios.post(`${process.env.REACT_APP_API_URL}/tx/${urlSuffix}`, body, { withCredentials: true })
         .then((response) => {
-          setResult('Transaction Complete');
+          setResult(completeMsg);
           setStepNum(2);
-          setReload(true);
         })
         .catch((error) => {
           setResult(error.message);

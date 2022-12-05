@@ -160,7 +160,6 @@ function TransactionList ({ user, shouldReload }) {
   useEffect(loadList, [user]);
   useEffect(loadList, [shouldReload]);
 
-
   const validationTest = (
     Array.isArray(transactions) &&
     transactions.length > 0 &&
