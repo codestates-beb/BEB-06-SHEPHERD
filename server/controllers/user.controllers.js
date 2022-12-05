@@ -25,13 +25,11 @@ const userInfo = async (req, res, next) => {
 };
 
 const accountInfo = async (req, res, next) => {
-  
   try {
-    let account;
-    if(!account) {
-      throw new Error ('존재하지 않는 계정입니다');
+    const account = await User.findOne({ account: req.query.a });
+    if (!account) {
+      throw new Error('존재하지 않는 계정입니다');
     }
-    account = await User.findOne({ account: req.query.a });
     delete Object.entries(account)[2][1].password;
     delete Object.entries(account)[2][1]._id;
 
@@ -234,10 +232,33 @@ const addAccount = async (req, res, next) => {
   res.status(200).json(getUser);
 };
 
+const refreshByToken = async (req, res, next) => {
+  if (!req.userData) {
+    const error = new HttpError('인증 정보가 없습니다', 403);
+    return next(error);
+  }
+
+  const userId = req.userData.userId;
+
+  let user;
+  try {
+    user = await User.findOne({ _id: userId });
+  } catch (err) {
+    const error = new HttpError('존재하지 않는 사용자입니다', 500);
+    return next(error);
+  }
+
+  delete Object.entries(user)[2][1].password;
+  delete Object.entries(user)[2][1]._id;
+
+  res.status(200).json(user);
+};
+
 module.exports = {
   userInfo,
   join,
   login,
   addAccount,
-  accountInfo
+  accountInfo,
+  refreshByToken
 };

@@ -1,5 +1,6 @@
 node_modules/
 package-lock.json
+client/.env
 server/.env*
 contract/.env*
 docker/
