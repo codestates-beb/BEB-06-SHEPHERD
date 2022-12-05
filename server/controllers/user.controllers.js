@@ -25,18 +25,21 @@ const userInfo = async (req, res, next) => {
 };
 
 const accountInfo = async (req, res, next) => {
-  let account;
+  
   try {
+    let account;
+    if(!account) {
+      throw new Error ('존재하지 않는 계정입니다');
+    }
     account = await User.findOne({ account: req.query.a });
+    delete Object.entries(account)[2][1].password;
+    delete Object.entries(account)[2][1]._id;
+
+    res.status(200).json(account);
   } catch (err) {
     const error = new HttpError('존재하지 않는 계정입니다', 500);
     return next(error);
   }
-
-  delete Object.entries(account)[2][1].password;
-  delete Object.entries(account)[2][1]._id;
-
-  res.status(200).json(account);
 };
 
 const join = async (req, res, next) => {
