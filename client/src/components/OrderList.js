@@ -4,6 +4,7 @@ import * as schema from 'features/schema';
 import { useEffect, useState } from 'react';
 
 // Material Components
+import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -13,7 +14,7 @@ import BaseStack from 'components/base/BaseStack';
 import OrderPopover from 'components/OrderPopover';
 import OrderOption from 'components/OrderOption';
 
-function OrderList ({ user }) {
+function OrderList ({ user, shouldReload }) {
   const [availableOrders, setOrders] = useState([]);
   const [isValid, setValidation] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -93,10 +94,19 @@ function OrderList ({ user }) {
     } catch (e) {
       setOrders([]);
     }
+
+    return () => {
+      setOrders([]);
+      setValidation(false);
+      setExpanded(false);
+      setOrderModal(false);
+      reset();
+    };
   };
 
   // Transaction 목록을 불러올 때마다 적용함
   useEffect(loadList, [user]);
+  useEffect(loadList, [shouldReload]);
 
   useEffect(() => {
     const validationTest = (
@@ -149,16 +159,30 @@ function OrderList ({ user }) {
               </BaseStack>
               <Modal
                 open={orderModal}
+                disableRestoreFocus
                 onClose={closeOrderModal}
                 aria-labelledby='order-modal'
               >
-                <OrderPopover
-                  privateKey={privateKey}
-                  setPrivateKey={setPrivateKey}
-                  tokenAmmount={tokenAmmount}
-                  receiver={receiver}
-                  type={type}
-                />
+                <Box sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 'auto',
+                  bgcolor: 'white',
+                  border: '0.5px solid #000',
+                  boxShadow: 24,
+                  p: 4
+                }}
+                >
+                  <OrderPopover
+                    privateKey={privateKey}
+                    setPrivateKey={setPrivateKey}
+                    tokenAmmount={tokenAmmount}
+                    receiver={receiver}
+                    type={type}
+                  />
+                </Box>
               </Modal>
             </>
             )

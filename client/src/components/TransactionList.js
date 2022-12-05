@@ -97,18 +97,18 @@ function TransactionItem ({ data }) {
   );
 }
 
-function TransactionList ({ user }) {
+function TransactionList ({ user, shouldReload }) {
   const [transactions, setTransactions] = useState([]);
 
-  const getAsyncUserInfo = async (Promise) => {
-    const response = await Promise;
-    if (response.data) {
-      const { data } = response;
-      return data;
-    }
-  };
-
   const loadList = () => {
+    const getAsyncUserInfo = async (Promise) => {
+      const response = await Promise;
+      if (response.data) {
+        const { data } = response;
+        return data;
+      }
+    };
+
     Axios.get(`${process.env.REACT_APP_API_URL}/tx/getTxInfo`, { withCredentials: true })
       .then((response) => {
         const { data } = response;
@@ -150,10 +150,16 @@ function TransactionList ({ user }) {
         console.error(error);
         setTransactions([]);
       });
+
+    return () => {
+      setTransactions([]);
+    };
   };
 
   // Transaction 목록을 불러올 때마다 적용함
   useEffect(loadList, [user]);
+  useEffect(loadList, [shouldReload]);
+
 
   const validationTest = (
     Array.isArray(transactions) &&

@@ -12,9 +12,12 @@ import Typography from '@mui/material/Typography';
 
 // Modules
 import Axios from 'axios';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { CurrentUserContext } from 'Contexts';
 
 function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type }) {
+  const { setReload } = useContext(CurrentUserContext);
+
   const [stepNum, setStepNum] = useState(0);
   const [result, setResult] = useState('');
 
@@ -59,6 +62,7 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type
         .then((response) => {
           setResult('Transaction Complete');
           setStepNum(2);
+          setReload(true);
         })
         .catch((error) => {
           setResult(error.message);
@@ -78,6 +82,7 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type
             <Typography variant='h5' mb={3}>{steps[0]}</Typography>
             <TextField
               fullWidth
+              autoFocus
               size='small'
               label='Private Key'
               name='privatekey'
@@ -145,18 +150,7 @@ function OrderPopover ({ privateKey, setPrivateKey, tokenAmmount, receiver, type
   };
 
   return (
-    <Box sx={{
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: 'auto',
-      bgcolor: 'white',
-      border: '0.5px solid #000',
-      boxShadow: 24,
-      p: 4
-    }}
-    >
+    <Box>
       <Container
         maxWidth='md'
         sx={{
