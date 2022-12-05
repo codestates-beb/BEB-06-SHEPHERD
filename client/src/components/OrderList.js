@@ -50,7 +50,7 @@ function OrderList ({ user, shouldReload }) {
 
           return {
             id: idx,
-            title: `Z Token to ${receiver.name}`,
+            title: `${receiver.name}에게 발주하기`,
             type: 'Z',
             from: {
               locationAddress: user.address,
@@ -72,7 +72,7 @@ function OrderList ({ user, shouldReload }) {
 
           return {
             id: idx,
-            title: `X Token to ${receiver.name}`,
+            title: `${receiver.name}(으)로 전달하기`,
             type: 'X',
             from: {
               locationAddress: user.address,

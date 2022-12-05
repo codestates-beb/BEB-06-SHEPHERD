@@ -47,10 +47,10 @@ function StatusStack ({ user, shouldReload }) {
         Token Balance
       </Typography>
       <Typography variant='body1' color={(theme) => theme.palette.text.secondary} sx={{ pl: 1, overflowWrap: 'anywhere' }}>
-        Z : {zBalance}
+        발주 토큰 : {zBalance}
       </Typography>
       <Typography variant='body1' color={(theme) => theme.palette.text.secondary} sx={{ pl: 1, overflowWrap: 'anywhere' }}>
-        X : {xBalance}
+        유통 토큰 : {xBalance}
       </Typography>
     </BaseStack>
   );
