@@ -1,0 +1,24 @@
+{
+  "name": "beb-06-steel-tracker",
+  "version": "1.0.0",
+  "description": "철강 유통망에 블록체인 기술을 접목하여, 유통 현황을 지속적으로 검토할 수 있는 모니터링 시스템을 개발하고자 함.",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codestates-beb/BEB-06-SHEPHERD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codestates-beb/BEB-06-SHEPHERD/issues"
+  },
+  "homepage": "https://github.com/codestates-beb/BEB-06-SHEPHERD#readme"
+}
