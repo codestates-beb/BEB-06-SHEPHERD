@@ -144,7 +144,7 @@ function TransactionList ({ user, shouldReload }) {
         return Promise.all(transactions);
       })
       .then((transactionPromises) => {
-        setTransactions(transactionPromises.reverse());
+        setTransactions(transactionPromises);
       })
       .catch(error => {
         console.error(error);
