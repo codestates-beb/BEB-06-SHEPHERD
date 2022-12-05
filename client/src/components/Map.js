@@ -1,8 +1,6 @@
 import React from 'react';
 import {ReactComponent as SouthKorea} from '../assets/svg/south-korea2.svg';
 import ReactToolTip from 'react-tooltip';
-import axios from 'axios';
-
 
 // web3
 const Web3 = require('web3');
@@ -10,7 +8,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
 
 // contract
 const shepherdAbi = require('../assets/shepherdabi');
-const contractHx = "0x83BeE91BcfE9a8CE765EA47Be9F33f80B38de487"; // 고정
+const contractHx = "0x79BdE0696800Ee731dE85d19cCB373514CC23325"; // 고정
 const contract = new web3.eth.Contract(shepherdAbi, contractHx);
 
 // useEffect 
@@ -47,10 +45,7 @@ const onMouseHover = async (e) =>{
 
 const Map = () => {
     return (
-      <div 
-      className='mapbox'
-      marginBottom='20px'
-      title='SouthKorea'>
+      <div>
       <SouthKorea
       className='map'
       onMouseOver={onMouseHover}
