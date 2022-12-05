@@ -15,6 +15,15 @@
         stroke: #f9f7f7;
         stroke-miterlimit: 10;
       }
+
+      .cls-1:hover {
+        fill: #dba751;
+      }
+
+      .cls-2:hover {
+        fill: #dba551;
+      }
+
     </style>
   </defs>
   <g id="Layer_1" dataname="Layer 1">

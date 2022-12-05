@@ -40,11 +40,6 @@ function Main () {
   return (
     <Container maxWidth='lg'>
       <Box component='main'>
-        <Map />
-        <ReactTooltip
-        place='bottom'
-        effect='solid'
-        type='warning'/>
         <MainFeaturedPost post={mainFeaturedPost} />
         <Grid container spacing={4}>
           {featuredPosts.map((post) => (
@@ -52,6 +47,8 @@ function Main () {
           ))}
         </Grid>
         <Grid container spacing={5} sx={{ mt: 3 }} />
+        <Map className='mapbox' marginBottom='20px' title='Shepherd: Current Supplychain'/>
+        <ReactTooltip place='bottom' effect='solid' type='warning'/>
       </Box>
     </Container>
   );
