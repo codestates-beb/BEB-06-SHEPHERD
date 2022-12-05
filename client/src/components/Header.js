@@ -37,8 +37,8 @@ const style = {
   p: 4
 };
 
-const pages = [{ name: ['Dashboard'], routeName: ['Dashboard'] }];
-const settings = [{ name: ['Transaction List'], routeName: ['Dashboard'] }, { name: ['Make Order'], routeName: ['Dashboard'] }];
+const pages = [{ name: ['Dashboard'], routeName: ['dashboard'] }];
+const settings = [{ name: ['Transaction List'], routeName: ['dashboard'] }, { name: ['Make Order'], routeName: ['dashboard'] }];
 
 function Header (props) {
   const [loginModal, setLoginModal] = useState(false);
@@ -66,7 +66,7 @@ function Header (props) {
       handleNavMenu.close();
       handleUserMenu.close();
     }
-  });
+  }, [loginModal]);
 
   return (
     <AppBar position='relative' component='header' sx={props.sx}>

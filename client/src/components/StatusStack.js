@@ -8,11 +8,11 @@ import Typography from '@mui/material/Typography';
 // Custom Components
 import BaseStack from 'components/base/BaseStack';
 
-function StatusStack ({ user }) {
+function StatusStack ({ user, shouldReload }) {
   const [zBalance, setZBalance] = useState(0);
   const [xBalance, setXBalance] = useState(0);
 
-  useEffect(() => {
+  const loadStatus = () => {
     Axios.get(`${process.env.REACT_APP_API_URL}/tx/getTokenBalance`, { withCredentials: true })
       .then(response => {
         const { data } = response;
@@ -27,7 +27,10 @@ function StatusStack ({ user }) {
         setZBalance(0);
         setXBalance(0);
       });
-  }, []);
+  };
+
+  useEffect(loadStatus, [user]);
+  useEffect(loadStatus, [shouldReload]);
 
   return (
     <BaseStack>

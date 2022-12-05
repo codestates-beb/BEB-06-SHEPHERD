@@ -1,5 +1,5 @@
 // Modules
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { CurrentUserContext } from 'Contexts';
 import { Navigate } from 'react-router-dom';
 
@@ -13,7 +13,11 @@ import OrderList from 'components/OrderList';
 import StatusStack from 'components/StatusStack';
 
 function Dashboard () {
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, shouldReload, setReload } = useContext(CurrentUserContext);
+
+  useEffect(() => {
+    if (shouldReload) setReload(false);
+  }, [shouldReload]);
 
   const style = {
     justifyContent: 'center',
@@ -31,17 +35,17 @@ function Dashboard () {
           <Grid container spacing={2} p={2} sx={style}>
             <Grid item xs={12}>
               <Paper elevation={5}>
-                <StatusStack user={currentUser} />
+                <StatusStack user={currentUser} shouldReload={shouldReload} />
               </Paper>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Paper elevation={5} sx={{ minHeight: 1 }}>
-                <OrderList user={currentUser} />
+                <OrderList user={currentUser} shouldReload={shouldReload} />
               </Paper>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Paper elevation={5} sx={{ minHeight: 1 }}>
-                <TransactionList user={currentUser} />
+                <TransactionList user={currentUser} shouldReload={shouldReload} />
               </Paper>
             </Grid>
           </Grid>
