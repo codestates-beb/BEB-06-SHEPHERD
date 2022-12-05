@@ -94,7 +94,6 @@ const join = async (req, res, next) => {
   const new_address = new_account.address;
   const privateKey = new_account.privateKey;
   userData.account = new_address;
-  console.log(privateKey);
 
   const newUser = new User(userData);
   try {
@@ -191,7 +190,7 @@ const login = async (req, res, next) => {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       const error = new HttpError('접근에 실패했습니다', 500);
       return next(error);
     }
@@ -231,10 +230,33 @@ const addAccount = async (req, res, next) => {
   res.status(200).json(getUser);
 };
 
+const refreshByToken = async (req, res, next) => {
+  if (!req.userData) {
+    const error = new HttpError('인증 정보가 없습니다', 403);
+    return next(error);
+  }
+
+  const userId = req.userData.userId;
+
+  let user;
+  try {
+    user = await User.findOne({ _id: userId });
+  } catch (err) {
+    const error = new HttpError('존재하지 않는 사용자입니다', 500);
+    return next(error);
+  }
+
+  delete Object.entries(user)[2][1].password;
+  delete Object.entries(user)[2][1]._id;
+
+  res.status(200).json(user);
+};
+
 module.exports = {
   userInfo,
   join,
   login,
   addAccount,
-  accountInfo
+  accountInfo,
+  refreshByToken
 };

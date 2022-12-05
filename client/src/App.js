@@ -1,5 +1,6 @@
 // Components
 import BaseLayout from 'components/base/BaseLayout';
+import Axios from 'axios';
 import { CurrentUserContext, TokenContext } from 'Contexts';
 
 // Modules
@@ -17,9 +18,16 @@ function App () {
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
 
   useEffect(() => {
-    console.log(currentUser);
-    console.log(cookies);
-  }, [currentUser, cookies]);
+    Axios.get(`${process.env.REACT_APP_API_URL}/user/refreshByToken`, { withCredentials: true })
+      .then((response) => {
+        const userInfo = response.data;
+        setCurrentUser(userInfo);
+      })
+      .catch((error) => {
+        console.error(error);
+        setCurrentUser(null);
+      });
+  }, [cookies]);
 
   return (
     <CurrentUserContext.Provider value={{
