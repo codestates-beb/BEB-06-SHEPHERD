@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -7,14 +9,14 @@ const checkAuth = require('./middleware/check-auth');
 
 const routes = require('./routes');
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 
 const app = express();
 
 // 외부 API를 사용하기 위한 CORS 추가
 const cors = require('cors');
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: process.env.CORS, credentials: true }));
 
 app.use(bodyParser.json());
 app.use(cookieParser());

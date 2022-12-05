@@ -4,3 +4,4 @@ server/.env*
 contract/.env*
 docker/
 .DS_Store
+Dockerfile
