@@ -1,11 +1,11 @@
-const HttpError = require('../models/http-error');
-const User = require('../models/user.models');
+const HttpError = require("../models/http-error");
+const User = require("../models/user.models");
 // web3
-const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545')); // 가나슈와 연동(로컬)
+const Web3 = require("web3");
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545")); // 가나슈와 연동(로컬)
 
 // contract
-const shepherdAbi = require('../../contract/abi/shepherdabi');
+const shepherdAbi = require("../../contract/abi/shepherdabi");
 const contractHx = process.env.SHEPHERD_CONTRACT_HX; // 고정
 const contract = new web3.eth.Contract(shepherdAbi, contractHx);
 const serverAddr = process.env.SERVER_ADDRESS; // abi : 복사해서 그대로 // 고정
@@ -15,7 +15,7 @@ const pohangPk = process.env.POHANG_PK;
 const sendZ = async (req, res, next) => {
   const { orderAmount, sendSupplier, userKey } = req.body;
   if (!req.userData) {
-    const error = new HttpError('인증 정보가 없습니다', 403);
+    const error = new HttpError("인증 정보가 없습니다", 403);
     return next(error);
   }
 
@@ -25,13 +25,14 @@ const sendZ = async (req, res, next) => {
   // DB query sendOrderAddress
   const sendOrderAddress = await User.findOne({
     sendOrder: sendSupplier,
-    account: userAccount
+    account: userAccount,
   });
 
   try {
-    if (!sendOrderAddress.sendOrder.find((element) => element === sendSupplier)) throw new Error("sendOrder don't have a sendSupplier");
+    if (!sendOrderAddress.sendOrder.find((element) => element === sendSupplier))
+      throw new Error("sendOrder don't have a sendSupplier");
 
-    if (sendOrderAddress.takeOrder[0] === '0x00') {
+    if (sendOrderAddress.takeOrder[0] === "0x00") {
       const transactionDataSU = contract.methods
         .safeTransferFrom(pohangAddr, userAccount, 0, orderAmount, 0x00)
         .encodeABI(); // Create the data for token transaction.
@@ -39,18 +40,18 @@ const sendZ = async (req, res, next) => {
       const rawTransactionSU = {
         to: contractHx,
         gas: 100000,
-        data: transactionDataSU
+        data: transactionDataSU,
       };
 
       const signedTxSU = await web3.eth.accounts.signTransaction(
         rawTransactionSU,
-        '0x' + pohangPk
+        "0x" + pohangPk
       );
 
       await web3.eth
         .sendSignedTransaction(signedTxSU.rawTransaction)
         .then(function (receipt) {
-          console.log('Transaction receipt: ', receipt);
+          console.log("Transaction receipt: ", receipt);
         })
         .catch((error) => {
           console.error(error);
@@ -73,15 +74,15 @@ const sendZ = async (req, res, next) => {
         {
           to: contractHx,
           gas: 100000,
-          data: transactionDataUS
+          data: transactionDataUS,
         },
-        '0x' + userKey
+        "0x" + userKey
       );
 
       await web3.eth
         .sendSignedTransaction(signedTxUS.rawTransaction)
         .then(function (receipt) {
-          console.log('Transaction receipt: ', receipt);
+          console.log("Transaction receipt: ", receipt);
         })
         .catch((error) => {
           console.error(error);
@@ -98,7 +99,7 @@ const sendZ = async (req, res, next) => {
         `sender balance: ${zBalanceU}, supplier balance: ${zBalanceS}`
       );
 
-      res.status(200).json({ message: 'success' });
+      res.status(200).json({ message: "success" });
     } else {
       const transactionDataUS = contract.methods
         .safeTransferFrom(userAccount, sendSupplier, 0, orderAmount, 0x00)
@@ -108,15 +109,15 @@ const sendZ = async (req, res, next) => {
         {
           to: contractHx,
           gas: 100000,
-          data: transactionDataUS
+          data: transactionDataUS,
         },
-        '0x' + userKey
+        "0x" + userKey
       );
 
       await web3.eth
         .sendSignedTransaction(signedTxUS.rawTransaction)
         .then(function (receipt) {
-          console.log('Transaction receipt: ', receipt);
+          console.log("Transaction receipt: ", receipt);
         })
         .catch((error) => {
           console.error(error);
@@ -133,10 +134,10 @@ const sendZ = async (req, res, next) => {
         `sender balance: ${zBalanceU}, supplier balance: ${zBalanceS}`
       );
 
-      res.status(200).json({ message: 'success' });
+      res.status(200).json({ message: "success" });
     }
   } catch (e) {
-    const error = new HttpError('올바른 접근이 아닙니다', 403);
+    const error = new HttpError("올바른 접근이 아닙니다", 403);
     return next(error);
   }
 };
@@ -144,7 +145,7 @@ const sendZ = async (req, res, next) => {
 const sendX = async (req, res, next) => {
   const { takeAmount, takeDistributor, userKey } = req.body;
   if (!req.userData) {
-    const error = new HttpError('인증 정보가 없습니다', 403);
+    const error = new HttpError("인증 정보가 없습니다", 403);
     return next(error);
   }
 
@@ -153,7 +154,7 @@ const sendX = async (req, res, next) => {
   // findOne({ Array: String }) => 배열 안의 값을 따져서 가져온다
   const takeDistributorAddress = await User.findOne({
     takeOrder: takeDistributor,
-    account: userAccount
+    account: userAccount,
   });
   console.log(takeDistributorAddress);
 
@@ -161,7 +162,12 @@ const sendX = async (req, res, next) => {
   // takeDistributor = String
   try {
     // 오류 처리
-    if (!(takeDistributorAddress.takeOrder.find((element) => element === takeDistributor))) throw new Error("takeOrder don't have takeDistributor");
+    if (
+      !takeDistributorAddress.takeOrder.find(
+        (element) => element === takeDistributor
+      )
+    )
+      throw new Error("takeOrder don't have takeDistributor");
 
     const transactionDataUD = contract.methods
       .safeTransferFrom(userAccount, takeDistributor, 1, takeAmount, 0x00)
@@ -171,7 +177,7 @@ const sendX = async (req, res, next) => {
       {
         to: contractHx,
         gas: 100000,
-        data: transactionDataUD
+        data: transactionDataUD,
       },
       userKey
     );
@@ -179,7 +185,7 @@ const sendX = async (req, res, next) => {
     await web3.eth
       .sendSignedTransaction(signedTxUD.rawTransaction)
       .then(function (receipt) {
-        console.log('Transaction receipt: ', receipt);
+        console.log("Transaction receipt: ", receipt);
       });
     const xBalance = await contract.methods.balanceOf(userAccount, 1).call();
     const xBalanceD = await contract.methods
@@ -192,9 +198,9 @@ const sendX = async (req, res, next) => {
       `sender balance: ${xBalance}, distributor balance: ${xBalanceD}`
     );
 
-    res.status(200).json({ message: 'success' });
+    res.status(200).json({ message: "success" });
   } catch (e) {
-    const error = new HttpError('올바른 접근이 아닙니다', 403);
+    const error = new HttpError("올바른 접근이 아닙니다", 403);
     return next(error);
   }
 };
@@ -216,7 +222,7 @@ const sendAll = async (req, res, next) => {
       `Transfer X token to Pohang : ${serverAddr} amount: ${serverBalanceX}`
     );
     if (serverBalanceX <= 0 || serverBalanceZ <= 0) {
-      console.log('Server has insufficient funds');
+      console.log("Server has insufficient funds");
     } else {
       const transactionDataAll = contract.methods
         .safeBatchTransferFrom(
@@ -232,15 +238,15 @@ const sendAll = async (req, res, next) => {
         {
           to: contractHx,
           gas: 100000,
-          data: transactionDataAll
+          data: transactionDataAll,
         },
-        '0x' + process.env.SERVER_PK
+        "0x" + process.env.SERVER_PK
       );
 
       await web3.eth
         .sendSignedTransaction(signedTxAll.rawTransaction)
         .then(function (receipt) {
-          console.log('Transaction Receipt:', receipt);
+          console.log("Transaction Receipt:", receipt);
         })
         .catch((error) => {
           console.error(error);
@@ -259,9 +265,9 @@ const sendAll = async (req, res, next) => {
         `Transfer X token to Pohang : ${userAccount} amount: ${pohangBalanceX}`
       );
     }
-    res.status(200).json({ message: 'success' });
+    res.status(200).json({ message: "success" });
   } else {
-    const error = new HttpError('올바른 접근이 아닙니다', 403);
+    const error = new HttpError("올바른 접근이 아닙니다", 403);
     return next(error);
   }
 };
@@ -270,26 +276,26 @@ const getTxInfo = async (req, res, next) => {
   try {
     const options = {
       filter: {
-        address: ['req.userData.userAccount'] // Only get events where transfer value was 1000 or 1337
+        address: ["req.userData.userAccount"], // Only get events where transfer value was 1000 or 1337
       },
       fromBlock: 3, // Number || "earliest" || "pending" || "latest"
-      toBlock: 'latest'
+      toBlock: "latest",
     };
 
     const queryTxInfo = await contract
-      .getPastEvents('TransferSingle', options)
+      .getPastEvents("TransferSingle", options)
       .then((results) => results);
 
     res.status(200).json({ queryTxInfo });
   } catch {
-    const error = new HttpError('올바른 접근이 아닙니다', 403);
+    const error = new HttpError("올바른 접근이 아닙니다", 403);
     return next(error);
   }
 };
 
 const getTokenBalance = async (req, res, next) => {
   if (!req.userData) {
-    const error = new HttpError('인증 정보가 없습니다', 403);
+    const error = new HttpError("인증 정보가 없습니다", 403);
     return next(error);
   }
 
@@ -304,8 +310,8 @@ const getTokenBalance = async (req, res, next) => {
     console.log(`total Z token: ${findBalanceZ}`);
     console.log(`total X token: ${findBalanceX}`);
     res.status(200).json({ findBalanceZ, findBalanceX });
-  } catch {
-    const error = new HttpError('올바른 접근이 아닙니다', 403);
+  } catch (err) {
+    const error = new HttpError("올바른 접근이 아닙니다", 403);
     return next(error);
   }
 };
@@ -315,5 +321,5 @@ module.exports = {
   sendX,
   sendAll,
   getTxInfo,
-  getTokenBalance
+  getTokenBalance,
 };

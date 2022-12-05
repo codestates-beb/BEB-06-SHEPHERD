@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import MainFeaturedPost from 'components/MainFeaturedPost';
 import FeaturedPost from 'components/FeaturedPost';
+import Map from '../components/Map';
+import ReactTooltip from 'react-tooltip';
 
 // blog
 
@@ -38,6 +40,11 @@ function Main () {
   return (
     <Container maxWidth='lg'>
       <Box component='main'>
+        <Map />
+        <ReactTooltip
+        place='bottom'
+        effect='solid'
+        type='warning'/>
         <MainFeaturedPost post={mainFeaturedPost} />
         <Grid container spacing={4}>
           {featuredPosts.map((post) => (
