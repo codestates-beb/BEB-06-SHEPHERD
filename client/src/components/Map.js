@@ -8,7 +8,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
 
 // contract
 const shepherdAbi = require('../assets/shepherdabi');
-const contractHx = "0x79BdE0696800Ee731dE85d19cCB373514CC23325"; // 고정
+const contractHx = process.env.REACT_APP_SHEPHERD_CONTRACT_HX; // 고정
 const contract = new web3.eth.Contract(shepherdAbi, contractHx);
 
 // useEffect 

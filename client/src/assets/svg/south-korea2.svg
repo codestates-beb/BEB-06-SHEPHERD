@@ -17,13 +17,13 @@
       }
 
       .cls-1:hover {
-        filter: #dba751;
+        fill: #dba751;
       }
 
       .cls-2:hover {
         fill: #dba551;
       }
-      
+
     </style>
   </defs>
   <g id="Layer_1" dataname="Layer 1">
