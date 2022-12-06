@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -10,14 +12,19 @@ import Stepper from '@mui/material/Stepper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+// Icons
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 // Modules
 import Axios from 'axios';
-import { useEffect, useState, useContext } from 'react';
 import { CurrentUserContext } from 'Contexts';
+import { useContext, useEffect, useState } from 'react';
 
 function OrderPopover ({ closeOrderModal, privateKey, setPrivateKey, tokenAmmount, receiver, type }) {
   const { setReload } = useContext(CurrentUserContext);
 
+  const [showPassword, setShowPassword] = useState(false);
   const [stepNum, setStepNum] = useState(0);
   const [result, setResult] = useState('');
 
@@ -96,11 +103,21 @@ function OrderPopover ({ closeOrderModal, privateKey, setPrivateKey, tokenAmmoun
               autoFocus
               size='small'
               label='Private Key'
+              type={showPassword ? 'text' : 'password'}
               name='privatekey'
               margin='normal'
               placeholder='123abc...'
               value={privateKey}
               onChange={handleChange(setPrivateKey)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton size='small' onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <VisibilityIcon fontSize='small' /> : <VisibilityOffIcon fontSize='small' />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
             />
             <Box
               sx={{
