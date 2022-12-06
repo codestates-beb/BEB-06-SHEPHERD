@@ -2,8 +2,6 @@ import React from 'react';
 import { ReactComponent as SouthKorea } from '../assets/svg/south-korea2.svg';
 import ReactToolTip from 'react-tooltip';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 
 // web3
 const Web3 = require('web3');
@@ -44,12 +42,12 @@ const onMouseHover = async (e) => {
 
 const Map = () => {
   return (
-    <Container
-      maxWidth='md'
+    <Box
       sx={(theme) => {
         return {
           display: 'flex',
           justifyContent: 'center',
+          margin: 'auto',
           paddingTop: '3em',
           paddingBottom: '6em',
           maxWidth: theme.breakpoints.values.md
@@ -60,7 +58,8 @@ const Map = () => {
         className='map'
         onMouseOver={onMouseHover}
       />
-    </Container>
+
+    </Box>
   );
 };
 
