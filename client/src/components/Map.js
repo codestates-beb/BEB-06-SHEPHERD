@@ -32,8 +32,8 @@ const onMouseHover = async (e) => {
   // 툴팁에 표시될 내용
   pathId?.setAttribute('data-tip',
     `<h3>${areaName}</h3>
-    Z Token ${findBalanceZ}<br/>
-    X Token ${findBalanceX}<br/>
+    발주 Token ${findBalanceZ}<br/>
+    수주 Token ${findBalanceX}<br/>
     <h5>"${findWallet}"</h5>
     `);
   // 해당 속성을 부여해야 새로고침 시에도 툴팁이 정상적으로 작동됨
