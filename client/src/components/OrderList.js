@@ -11,8 +11,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 // Custom Components
 import BaseStack from 'components/base/BaseStack';
-import OrderPopover from 'components/OrderPopover';
-import OrderOption from 'components/OrderOption';
+import OrderPopover from 'components/orderList/OrderPopover';
+import OrderOption from 'components/orderList/OrderOption';
 
 function OrderList ({ user, shouldReload }) {
   const [availableOrders, setOrders] = useState([]);
