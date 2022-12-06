@@ -39,7 +39,12 @@ const featuredPosts = [
 function Main () {
   return (
     <Container maxWidth='lg'>
-      <Box component='main'>
+      <Box
+        component='main' sx={{
+          display: 'flex',
+          height: '100%'
+        }}
+      >
         {/* <MainFeaturedPost post={mainFeaturedPost} />
         <Grid container spacing={4}>
           {featuredPosts.map((post) => (

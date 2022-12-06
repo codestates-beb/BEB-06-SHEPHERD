@@ -43,12 +43,14 @@ const onMouseHover = async (e) => {
 const Map = () => {
   return (
     <Container
-      maxWidth='sm'
+      maxWidth='md'
       sx={(theme) => {
         return {
+          display: 'flex',
+          justifyContent: 'center',
           marginTop: '2em',
           marginBottom: '2em',
-          maxWidth: theme.breakpoints.values.sm
+          maxWidth: theme.breakpoints.values.md
         };
       }}
     >
