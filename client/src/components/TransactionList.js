@@ -4,102 +4,15 @@ Trasaction List마다 useState를 두고 컴포넌트 렌더링 타이밍에 데
 
 // Modules
 import Axios from 'axios';
-import parseObject from 'features/parseObject';
 import * as schema from 'features/schema';
 import { useEffect, useState } from 'react';
 
 // Material Components
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 
 // Custom Components
 import BaseStack from 'components/base/BaseStack';
-
-// 내부의 open state를 제외하고는 props에서 데이터를 받아 채운다.
-function TransactionItem ({ data }) {
-  const [open, setOpen] = useState(false);
-  const { blockNumber, transactionHash } = data;
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
-  return (
-    <Card
-      variant='outlined'
-      sx={{
-        display: 'flex',
-        alignItems: 'stretch',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        mb: 2
-      }}
-    >
-      <CardHeader
-        title={
-          <Typography
-            variant='body1'
-            sx={{ fontWeight: 500 }}
-          >{`Block Number #${blockNumber}`}
-          </Typography>
-        }
-        subheader={
-          <>
-            <Typography variant='subtitle2'>Transaction Hash</Typography>
-            <Typography variant='body2'>{transactionHash}</Typography>
-          </>
-        }
-        sx={{
-          flexGrow: 1,
-          overflowWrap: 'anywhere'
-        }}
-      />
-      <CardActions sx={{ p: 1 }}>
-        <Button size='medium' color='primary' onClick={handleClick}>
-          <Typography variant='body1'>Show Details</Typography>
-        </Button>
-      </CardActions>
-      <Collapse in={open} sx={{ flexBasis: '100%', overflowWrap: 'anywhere' }}>
-        <CardContent
-          sx={{
-            p: 2,
-            pt: 0
-          }}
-        >
-          {parseObject(data, (key, value) => {
-            if (value instanceof Date) {
-              value = value.toDateString();
-            }
-
-            return (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start'
-                }}
-                pb={1}
-                key={key}
-              >
-                <Typography variant='subtitle2' sx={{ mr: 1 }}>
-                  {key}
-                </Typography>
-                <Typography variant='body2'>{value}</Typography>
-              </Box>
-            );
-          })}
-        </CardContent>
-      </Collapse>
-    </Card>
-  );
-}
+import TransactionCard from 'components/transactionList/TransactionCard';
 
 function TransactionList ({ user, shouldReload }) {
   const [transactions, setTransactions] = useState([]);
@@ -120,7 +33,6 @@ function TransactionList ({ user, shouldReload }) {
         const { data } = response;
         const { queryTxInfo } = data;
 
-        console.log(data);
         const transactions = queryTxInfo.map(async (tx) => {
           const arrival = await getAsyncUserInfo(
             Axios.get(`${process.env.REACT_APP_API_URL}/user`, {
@@ -135,17 +47,20 @@ function TransactionList ({ user, shouldReload }) {
             })
           );
 
+          const types = ['발주(ZToken)', '유통(XToken)']
+
           return {
             blockNumber: tx.blockNumber,
             blockHash: tx.blockHash,
             transactionHash: tx.transactionHash,
             value: parseInt(tx.returnValues.value),
-            arrival: {
+            type: types[tx.returnValues['3']],
+            to: {
               name: arrival.name,
               location: arrival.address,
               accountAddress: arrival.account
             },
-            departure: {
+            from: {
               name: departure.name,
               location: departure.address,
               accountAddress: departure.account
@@ -191,14 +106,14 @@ function TransactionList ({ user, shouldReload }) {
       </Typography>
 
       {validationTest
-? (
-        transactions.map((item, i) => {
-          return <TransactionItem key={i} data={item} />;
-        })
-      )
-: (
-        <Typography>You don't have any transaction yet.</Typography>
-      )}
+        ? (
+            transactions.map((item, i) => {
+              return <TransactionCard key={i} data={item} />;
+            })
+          )
+        : (
+          <Typography>You don't have any transaction yet.</Typography>
+          )}
     </BaseStack>
   );
 }
