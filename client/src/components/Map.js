@@ -1,7 +1,9 @@
 import React from 'react';
 import { ReactComponent as SouthKorea } from '../assets/svg/south-korea2.svg';
 import ReactToolTip from 'react-tooltip';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 
 // web3
 const Web3 = require('web3');
@@ -43,12 +45,14 @@ const onMouseHover = async (e) => {
 const Map = () => {
   return (
     <Container
-      maxWidth='sm'
+      maxWidth='md'
       sx={(theme) => {
         return {
-          marginTop: '2em',
-          marginBottom: '2em',
-          maxWidth: theme.breakpoints.values.sm
+          display: 'flex',
+          justifyContent: 'center',
+          paddingTop: '3em',
+          paddingBottom: '6em',
+          maxWidth: theme.breakpoints.values.md
         };
       }}
     >
