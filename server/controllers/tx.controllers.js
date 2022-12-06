@@ -27,114 +27,93 @@ const sendZ = async (req, res, next) => {
     sendOrder: sendSupplier,
     account: userAccount,
   });
+  const balanceZ = parseFloat(
+    await contract.methods.balanceOf(userAccount, 0).call()
+  );
 
+  const sendZToPohang = async () => {
+    const transactionDataSU = contract.methods
+      .safeTransferFrom(pohangAddr, userAccount, 0, orderAmount, 0x00)
+      .encodeABI(); // Create the data for token transaction.
+
+    const rawTransactionSU = {
+      to: contractHx,
+      gas: 100000,
+      data: transactionDataSU,
+    };
+
+    const signedTxSU = await web3.eth.accounts.signTransaction(
+      rawTransactionSU,
+      "0x" + pohangPk
+    );
+
+    await web3.eth
+      .sendSignedTransaction(signedTxSU.rawTransaction)
+      .then(function (receipt) {
+        console.log("Transaction receipt: ", receipt);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    const zBalanceSU = await contract.methods.balanceOf(userAccount, 0).call();
+    console.log(
+      `Z coin sent from: ${pohangAddr} to: ${userAccount}, amount: ${zBalanceSU}`
+    );
+  };
+
+  const sendZMethod = async () => {
+    const transactionDataUS = contract.methods
+      .safeTransferFrom(userAccount, sendSupplier, 0, orderAmount, 0x00)
+      .encodeABI(); // Create the data for token transaction.
+
+    const signedTxUS = await web3.eth.accounts.signTransaction(
+      {
+        to: contractHx,
+        gas: 100000,
+        data: transactionDataUS,
+      },
+      "0x" + userKey
+    );
+
+    await web3.eth
+      .sendSignedTransaction(signedTxUS.rawTransaction)
+      .then(function (receipt) {
+        console.log("Transaction receipt: ", receipt);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
+    const zBalanceS = await contract.methods.balanceOf(sendSupplier, 0).call();
+    console.log(
+      `Z coin sent from user: ${userAccount} to supplier: ${sendSupplier}`
+    );
+    console.log(`sender balance: ${zBalanceU}, supplier balance: ${zBalanceS}`);
+
+    res.status(200).json({ message: "success" });
+  };
   try {
     if (!sendOrderAddress.sendOrder.find((element) => element === sendSupplier))
       throw new Error("sendOrder don't have a sendSupplier");
 
-    if (sendOrderAddress.takeOrder[0] === "0x00") {
-      const transactionDataSU = contract.methods
-        .safeTransferFrom(pohangAddr, userAccount, 0, orderAmount, 0x00)
-        .encodeABI(); // Create the data for token transaction.
-
-      const rawTransactionSU = {
-        to: contractHx,
-        gas: 100000,
-        data: transactionDataSU,
-      };
-
-      const signedTxSU = await web3.eth.accounts.signTransaction(
-        rawTransactionSU,
-        "0x" + pohangPk
-      );
-
-      await web3.eth
-        .sendSignedTransaction(signedTxSU.rawTransaction)
-        .then(function (receipt) {
-          console.log("Transaction receipt: ", receipt);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      const zBalanceSU = await contract.methods
-        .balanceOf(userAccount, 0)
-        .call();
-      console.log(
-        `Z coin sent from: ${pohangAddr} to: ${userAccount}, amount: ${zBalanceSU}`
-      );
-
-      // 발주 넣을 수량 Z 코인으로 전송
-      // DB query
-      const transactionDataUS = contract.methods
-        .safeTransferFrom(userAccount, sendSupplier, 0, orderAmount, 0x00)
-        .encodeABI(); // Create the data for token transaction.
-
-      const signedTxUS = await web3.eth.accounts.signTransaction(
-        {
-          to: contractHx,
-          gas: 100000,
-          data: transactionDataUS,
-        },
-        "0x" + userKey
-      );
-
-      await web3.eth
-        .sendSignedTransaction(signedTxUS.rawTransaction)
-        .then(function (receipt) {
-          console.log("Transaction receipt: ", receipt);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
-      const zBalanceS = await contract.methods
-        .balanceOf(sendSupplier, 0)
-        .call();
-      console.log(
-        `Z coin sent from user: ${userAccount} to supplier: ${sendSupplier}`
-      );
-      console.log(
-        `sender balance: ${zBalanceU}, supplier balance: ${zBalanceS}`
-      );
-
-      res.status(200).json({ message: "success" });
+    if (sendOrderAddress.takeOrder[0] === "0x00" && balanceZ === 0) {
+      sendZToPohang();
+      sendZMethod();
+    } else if (
+      sendOrderAddress.takeOrder[0] === "0x00" &&
+      balanceZ > 0 &&
+      orderAmount > balanceZ
+    ) {
+      sendZToPohang.orderAmount = orderAmount - balanceZ;
+      sendZToPohang();
+      sendZMethod();
+    } else if (balanceZ > 0 && orderAmount > balanceZ) {
+      const error = new HttpError("발주량이 보유 수량보다 많습니다", 403);
+      return next(error);
     } else {
-      const transactionDataUS = contract.methods
-        .safeTransferFrom(userAccount, sendSupplier, 0, orderAmount, 0x00)
-        .encodeABI(); // Create the data for token transaction.
-
-      const signedTxUS = await web3.eth.accounts.signTransaction(
-        {
-          to: contractHx,
-          gas: 100000,
-          data: transactionDataUS,
-        },
-        "0x" + userKey
-      );
-
-      await web3.eth
-        .sendSignedTransaction(signedTxUS.rawTransaction)
-        .then(function (receipt) {
-          console.log("Transaction receipt: ", receipt);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      const zBalanceU = await contract.methods.balanceOf(userAccount, 0).call();
-      const zBalanceS = await contract.methods
-        .balanceOf(sendSupplier, 0)
-        .call();
-      console.log(
-        `Z coin sent from user: ${userAccount} to supplier: ${sendSupplier}`
-      );
-      console.log(
-        `sender balance: ${zBalanceU}, supplier balance: ${zBalanceS}`
-      );
-
-      res.status(200).json({ message: "success" });
+      sendZMethod();
     }
   } catch (e) {
     const error = new HttpError("올바른 접근이 아닙니다", 403);
