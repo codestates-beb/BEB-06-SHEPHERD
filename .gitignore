@@ -3,5 +3,6 @@ package-lock.json
 client/.env
 server/.env*
 contract/.env*
+contract/build
 docker/
 .DS_Store
