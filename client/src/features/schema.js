@@ -18,7 +18,11 @@ export const transaction = new Schema(
       type: Number,
       required: true
     },
-    arrival: {
+    type: {
+      type: String,
+      required: true
+    },
+    to: {
       location: {
         type: String,
         required: false
@@ -28,7 +32,7 @@ export const transaction = new Schema(
         required: true
       }
     },
-    departure: {
+    from: {
       location: {
         type: String,
         required: false
